@@ -3,5 +3,9 @@ import react from '@vitejs/plugin-react';
 
 export default defineConfig({
   plugins: [react()],
-  base: '/genitouriner_raporlama/', // GitHub Pages için repository adınız
+  base: '/genitouriner_raporlama/',
+  build: {
+    outDir: 'docs',        // ← derleme çıktısını docs/ altına yazar
+    emptyOutDir: true      // ← her seferinde temizler
+  }
 });
