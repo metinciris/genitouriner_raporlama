@@ -1,8 +1,7 @@
 import React from 'react';
 import ReactDOM from 'react-dom/client';
-import RenalPelvisUreterPathologySystem from './renal-pelvis-ureter-pathology-system';
-
-import './index.css'; // varsa stil
+import RenalPelvisUreterPathologySystem from './components/RenalPelvisUreterPathologySystem';
+import './index.css';
 
 ReactDOM.createRoot(document.getElementById('root')!).render(
   <React.StrictMode>
