@@ -1,0 +1,1413 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Penis ve Distal Üretra Karsinomu Histopatoloji Rapor Sistemi</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #f0f4f8;
+            color: #1a202c;
+            line-height: 1.6;
+        }
+
+        .container {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+            padding: 20px;
+            max-width: 1600px;
+            margin: 0 auto;
+        }
+
+        .input-section {
+            background: white;
+            border-radius: 12px;
+            padding: 24px;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+            overflow-y: auto;
+            max-height: calc(100vh - 40px);
+        }
+
+        .report-section {
+            background: white;
+            border-radius: 12px;
+            padding: 24px;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+            position: sticky;
+            top: 20px;
+            max-height: calc(100vh - 40px);
+            overflow-y: auto;
+        }
+
+        h1 {
+            color: #2c5282;
+            font-size: 24px;
+            margin-bottom: 24px;
+            font-weight: 600;
+        }
+
+        h2 {
+            color: #2d3748;
+            font-size: 18px;
+            margin-top: 24px;
+            margin-bottom: 16px;
+            font-weight: 600;
+        }
+
+        h3 {
+            color: #4a5568;
+            font-size: 16px;
+            margin-top: 16px;
+            margin-bottom: 12px;
+            font-weight: 500;
+        }
+
+        .section {
+            background: #f7fafc;
+            border-radius: 8px;
+            padding: 16px;
+            margin-bottom: 16px;
+            border: 1px solid #e2e8f0;
+        }
+
+        .form-group {
+            margin-bottom: 16px;
+        }
+
+        label {
+            display: block;
+            font-weight: 500;
+            color: #4a5568;
+            margin-bottom: 8px;
+            font-size: 14px;
+        }
+
+        input[type="text"],
+        input[type="number"],
+        input[type="date"],
+        textarea {
+            width: 100%;
+            padding: 10px 12px;
+            border: 1px solid #cbd5e0;
+            border-radius: 6px;
+            font-size: 14px;
+            transition: all 0.2s;
+            font-family: 'Inter', sans-serif;
+        }
+
+        input[type="text"]:focus,
+        input[type="number"]:focus,
+        input[type="date"]:focus,
+        textarea:focus {
+            outline: none;
+            border-color: #4299e1;
+            box-shadow: 0 0 0 3px rgba(66, 153, 225, 0.1);
+        }
+
+        .option-group {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+            margin-bottom: 12px;
+        }
+
+        .option-button {
+            padding: 8px 16px;
+            border: 2px solid #cbd5e0;
+            border-radius: 6px;
+            background: white;
+            cursor: pointer;
+            transition: all 0.2s;
+            font-size: 14px;
+            font-weight: 500;
+        }
+
+        .option-button:hover {
+            border-color: #4299e1;
+            background: #ebf8ff;
+        }
+
+        .option-button.selected {
+            background: #4299e1;
+            color: white;
+            border-color: #4299e1;
+        }
+
+        .multi-select .option-button {
+            border-radius: 20px;
+        }
+
+        .multi-select .option-button.selected {
+            background: #48bb78;
+            border-color: #48bb78;
+        }
+
+        .report-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+
+        .copy-button {
+            padding: 8px 16px;
+            background: #4299e1;
+            color: white;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+            font-weight: 500;
+            transition: all 0.2s;
+        }
+
+        .copy-button:hover {
+            background: #3182ce;
+        }
+
+        .report-content {
+            font-size: 14px;
+            line-height: 1.8;
+            white-space: pre-wrap;
+            color: #2d3748;
+        }
+
+        .input-group {
+            display: flex;
+            gap: 8px;
+            align-items: center;
+        }
+
+        .input-group input {
+            flex: 1;
+        }
+
+        .unit {
+            color: #718096;
+            font-size: 14px;
+        }
+
+        .subsection {
+            margin-left: 16px;
+            padding-left: 16px;
+            border-left: 3px solid #e2e8f0;
+        }
+
+        .tooltip {
+            position: relative;
+            display: inline-block;
+            cursor: help;
+        }
+
+        .tooltip-icon {
+            display: inline-block;
+            width: 16px;
+            height: 16px;
+            background: #4299e1;
+            color: white;
+            border-radius: 50%;
+            text-align: center;
+            line-height: 16px;
+            font-size: 12px;
+            margin-left: 4px;
+        }
+
+        .tooltip-content {
+            visibility: hidden;
+            width: 250px;
+            background-color: #2d3748;
+            color: white;
+            text-align: left;
+            border-radius: 6px;
+            padding: 8px 12px;
+            position: absolute;
+            z-index: 1;
+            bottom: 125%;
+            left: 50%;
+            margin-left: -125px;
+            opacity: 0;
+            transition: opacity 0.3s;
+            font-size: 12px;
+        }
+
+        .tooltip:hover .tooltip-content {
+            visibility: visible;
+            opacity: 1;
+        }
+
+        @media (max-width: 768px) {
+            .container {
+                grid-template-columns: 1fr;
+            }
+            
+            .report-section {
+                position: relative;
+                top: 0;
+            }
+        }
+
+        .stage-suggestion {
+            background: #ebf8ff;
+            border: 1px solid #4299e1;
+            border-radius: 6px;
+            padding: 12px;
+            margin-top: 8px;
+            font-size: 14px;
+        }
+
+        .clickable-field {
+            color: #4299e1;
+            cursor: pointer;
+            text-decoration: underline;
+        }
+
+        .required {
+            color: #e53e3e;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="input-section">
+            <h1>Penis ve Distal Üretra Karsinomu Histopatoloji Raporu</h1>
+
+            <div class="section">
+                <h2>Hasta Bilgileri</h2>
+                <div class="form-group">
+                    <label>Hasta Adı Soyadı <span class="required">*</span></label>
+                    <input type="text" id="patientName" placeholder="Ad Soyad">
+                </div>
+                <div class="form-group">
+                    <label>Doğum Tarihi</label>
+                    <input type="date" id="birthDate">
+                </div>
+                <div class="form-group">
+                    <label>Protokol Numarası <span class="required">*</span></label>
+                    <input type="text" id="protocolNumber" placeholder="Protokol numarası">
+                </div>
+                <div class="form-group">
+                    <label>İstem Tarihi</label>
+                    <input type="date" id="requestDate">
+                </div>
+            </div>
+
+            <div class="section">
+                <h2>Klinik Bilgiler</h2>
+                <div class="option-group multi-select">
+                    <button class="option-button" data-value="previousCancer">Önceki penis/üretra kanseri öyküsü</button>
+                    <button class="option-button" data-value="previousTherapy">Önceki tedavi</button>
+                    <button class="option-button" data-value="previousHPV">Önceki HPV enfeksiyonu</button>
+                    <button class="option-button" data-value="otherClinical">Diğer klinik bilgi</button>
+                </div>
+                <div id="clinicalDetails" style="display: none;">
+                    <textarea id="clinicalDetailsText" rows="3" placeholder="Detayları giriniz..."></textarea>
+                </div>
+            </div>
+
+            <div class="section">
+                <h2>Operatif Prosedür</h2>
+                <div class="option-group multi-select">
+                    <button class="option-button" data-value="partialPenectomy">Parsiyel penektomi</button>
+                    <button class="option-button" data-value="radicalPenectomy">Radikal penektomi</button>
+                    <button class="option-button" data-value="glansPreserving">Glans koruyucu</button>
+                    <button class="option-button" data-value="glansectomy">Glansektomi</button>
+                    <button class="option-button" data-value="circumcision">Sünnet</button>
+                    <button class="option-button" data-value="incisionalBiopsy">İnsizyonel/punch biyopsi</button>
+                    <button class="option-button" data-value="excisionalBiopsy">Eksizyonel biyopsi</button>
+                    <button class="option-button" data-value="urethrectomy">Üretrektomi</button>
+                    <button class="option-button" data-value="lymphadenectomy">Lenfadenektomi</button>
+                </div>
+                
+                <div id="lymphNodeDetails" style="display: none;">
+                    <h3>Lenf Nodu Detayları</h3>
+                    <div class="subsection">
+                        <div class="option-group">
+                            <button class="option-button" data-value="sentinel">Sentinel</button>
+                            <button class="option-button" data-value="inguinalLeft">İnguinal Sol</button>
+                            <button class="option-button" data-value="inguinalRight">İnguinal Sağ</button>
+                            <button class="option-button" data-value="pelvicLeft">Pelvik Sol</button>
+                            <button class="option-button" data-value="pelvicRight">Pelvik Sağ</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="section">
+                <h2>Tümör Lokalizasyonu</h2>
+                <div class="option-group multi-select">
+                    <button class="option-button" data-value="glans">Glans penis</button>
+                    <button class="option-button" data-value="coronalSulcus">Koronal sulkus</button>
+                    <button class="option-button" data-value="foreskin">Sünnet derisi</button>
+                    <button class="option-button" data-value="distalUrethra">Distal penil üretra</button>
+                    <button class="option-button" data-value="shaft">Penis gövdesi/şaft</button>
+                </div>
+            </div>
+
+            <div class="section">
+                <h2>Tümör Özellikleri</h2>
+                <div class="form-group">
+                    <label>Tümör Fokalitesi</label>
+                    <div class="option-group">
+                        <button class="option-button" data-value="unifocal">Unifokal</button>
+                        <button class="option-button" data-value="multifocal">Multifokal</button>
+                    </div>
+                    <div id="tumorCount" style="display: none;">
+                        <label>Tümör Sayısı</label>
+                        <input type="number" id="tumorNumber" min="2" placeholder="Tümör sayısı">
+                    </div>
+                </div>
+                
+                <div class="form-group">
+                    <label>Tümör Boyutları</label>
+                    <div class="input-group">
+                        <input type="number" id="tumorSize1" placeholder="En büyük boyut">
+                        <span class="unit">×</span>
+                        <input type="number" id="tumorSize2" placeholder="İkinci boyut">
+                        <span class="unit">×</span>
+                        <input type="number" id="tumorSize3" placeholder="Üçüncü boyut">
+                        <span class="unit">mm</span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="section">
+                <h2>Histolojik Tümör Tipi</h2>
+                <h3>HPV-İlişkili</h3>
+                <div class="option-group">
+                    <button class="option-button" data-value="basaloid">Bazaloid skuamöz hücreli karsinom</button>
+                    <button class="option-button" data-value="warty">Warty karsinom</button>
+                    <button class="option-button" data-value="clearCell">Clear cell skuamöz hücreli karsinom</button>
+                    <button class="option-button" data-value="lymphoepithelioma">Lenfoepitelyal karsinom</button>
+                </div>
+                
+                <h3>HPV-Bağımsız</h3>
+                <div class="option-group">
+                    <button class="option-button" data-value="usual">Skuamöz hücreli karsinom, usual tip</button>
+                    <button class="option-button" data-value="verrucous">Verrüköz karsinom</button>
+                    <button class="option-button" data-value="papillary">Papiller skuamöz hücreli karsinom</button>
+                    <button class="option-button" data-value="sarcomatoid">Sarkomatoid skuamöz hücreli karsinom</button>
+                </div>
+                
+                <h3>Diğer</h3>
+                <div class="option-group">
+                    <button class="option-button" data-value="mixed">Mikst skuamöz hücreli karsinom</button>
+                    <button class="option-button" data-value="nos">Skuamöz hücreli karsinom, NOS</button>
+                </div>
+            </div>
+
+            <div class="section">
+                <h2>İnvazyon Derinliği</h2>
+                <div id="invasionDepthPenis" class="subsection">
+                    <h3>Penis ve Sünnet Derisi Primer Tümörleri</h3>
+                    <div class="option-group">
+                        <button class="option-button" data-value="noInvasion">İnvazyon yok</button>
+                        <button class="option-button" data-value="subepithelial">Subepitelyal/lamina propria invazyonu</button>
+                        <button class="option-button" data-value="corpusSpongiosum">Korpus spongiosum invazyonu</button>
+                        <button class="option-button" data-value="corpusCavernosum">Korpus kavernozum invazyonu</button>
+                        <button class="option-button" data-value="tunicaAlbuginea">Tunika albuginea invazyonu</button>
+                        <button class="option-button" data-value="adjacentStructures">Komşu yapılara invazyon</button>
+                    </div>
+                </div>
+                
+                <div id="invasionDepthUrethra" class="subsection">
+                    <h3>Distal Üretra Primer Tümörleri</h3>
+                    <div class="option-group">
+                        <button class="option-button" data-value="noInvasionUrethra">İnvazyon yok</button>
+                        <button class="option-button" data-value="subepithelialUrethra">Subepitelyal/lamina propria invazyonu</button>
+                        <button class="option-button" data-value="corpusSpongiosumUrethra">Korpus spongiosum invazyonu</button>
+                        <button class="option-button" data-value="corpusCavernosumUrethra">Korpus kavernozum invazyonu</button>
+                        <button class="option-button" data-value="adjacentStructuresUrethra">Komşu yapılara invazyon</button>
+                    </div>
+                </div>
+                
+                <div class="form-group">
+                    <label>Tümör Kalınlığı (mm)</label>
+                    <input type="number" id="tumorThickness" placeholder="mm" step="0.1">
+                </div>
+                
+                <div class="form-group">
+                    <label>İnvazyon Derinliği (mm)</label>
+                    <input type="number" id="invasionDepth" placeholder="mm" step="0.1">
+                </div>
+            </div>
+
+            <div class="section">
+                <h2>Histolojik Derece (Sadece rezeksiyon spesimenleri)</h2>
+                <div class="option-group">
+                    <button class="option-button" data-value="g1">G1: İyi diferansiye</button>
+                    <button class="option-button" data-value="g2">G2: Orta diferansiye</button>
+                    <button class="option-button" data-value="g3">G3: Az diferansiye</button>
+                    <button class="option-button" data-value="sarcomatoid">Sarkomatoid alanlar mevcut</button>
+                </div>
+            </div>
+
+            <div class="section">
+                <h2>İnvazyon Paterni</h2>
+                <div class="option-group">
+                    <button class="option-button" data-value="pushing">İtici (Pushing)</button>
+                    <button class="option-button" data-value="infiltrative">İnfiltratif</button>
+                </div>
+            </div>
+
+            <div class="section">
+                <h2>Lenfovasküler İnvazyon</h2>
+                <div class="option-group">
+                    <button class="option-button" data-value="lviPresent">Mevcut</button>
+                    <button class="option-button" data-value="lviAbsent">Saptanmadı</button>
+                    <button class="option-button" data-value="lviIndeterminate">Belirsiz</button>
+                </div>
+            </div>
+
+            <div class="section">
+                <h2>Perinöral İnvazyon</h2>
+                <div class="option-group">
+                    <button class="option-button" data-value="pniPresent">Mevcut</button>
+                    <button class="option-button" data-value="pniAbsent">Saptanmadı</button>
+                    <button class="option-button" data-value="pniIndeterminate">Belirsiz</button>
+                </div>
+            </div>
+
+            <div class="section">
+                <h2>İlişkili Penil İntraepitelyal Neoplazi (PeIN)</h2>
+                <div class="option-group">
+                    <button class="option-button" data-value="peinPresent">Mevcut</button>
+                    <button class="option-button" data-value="peinAbsent">Saptanmadı</button>
+                </div>
+                <div id="peinType" style="display: none;">
+                    <label>PeIN Tipi</label>
+                    <div class="option-group">
+                        <button class="option-button" data-value="wartyBasaloid">Warty ve/veya Bazaloid</button>
+                        <button class="option-button" data-value="differentiated">Diferansiye</button>
+                    </div>
+                </div>
+            </div>
+
+            <div class="section">
+                <h2>Cerrahi Sınırlar</h2>
+                
+                <div class="subsection">
+                    <h3>Üretral Sınır (Penis/sünnet derisi tümörleri için)</h3>
+                    <div class="option-group">
+                        <button class="option-button" data-value="urethralNegative">Negatif</button>
+                        <button class="option-button" data-value="urethralPeIN">PeIN ile pozitif</button>
+                        <button class="option-button" data-value="urethralCarcinoma">İnvaziv karsinom ile pozitif</button>
+                    </div>
+                    <div id="urethralDistance" style="display: none;">
+                        <label>İnvaziv tümöre mesafe (mm)</label>
+                        <input type="number" id="urethralDistanceValue" placeholder="mm veya >5" step="0.1">
+                    </div>
+                </div>
+
+                <div class="subsection">
+                    <h3>Proksimal Üretral Sınır (Üretra tümörleri için)</h3>
+                    <div class="option-group">
+                        <button class="option-button" data-value="proxUrethralNegative">Negatif</button>
+                        <button class="option-button" data-value="proxUrethralPeIN">PeIN ile pozitif</button>
+                        <button class="option-button" data-value="proxUrethralCarcinoma">İnvaziv karsinom ile pozitif</button>
+                    </div>
+                    <div id="proxUrethralDistance" style="display: none;">
+                        <label>İnvaziv tümöre mesafe (mm)</label>
+                        <input type="number" id="proxUrethralDistanceValue" placeholder="mm veya >5" step="0.1">
+                    </div>
+                </div>
+
+                <div class="subsection">
+                    <h3>Peri-üretral Dokular</h3>
+                    <div class="option-group">
+                        <button class="option-button" data-value="periUrethralNegative">Negatif</button>
+                        <button class="option-button" data-value="periUrethralCarcinoma">İnvaziv karsinom ile pozitif</button>
+                    </div>
+                    <div id="periUrethralDistance" style="display: none;">
+                        <label>İnvaziv tümöre mesafe (mm)</label>
+                        <input type="number" id="periUrethralDistanceValue" placeholder="mm veya >5" step="0.1">
+                    </div>
+                </div>
+
+                <div class="subsection">
+                    <h3>Korpus Kavernozum</h3>
+                    <div class="option-group">
+                        <button class="option-button" data-value="corpusNegative">Negatif</button>
+                        <button class="option-button" data-value="corpusCarcinoma">İnvaziv karsinom ile pozitif</button>
+                    </div>
+                    <div id="corpusDistance" style="display: none;">
+                        <label>İnvaziv tümöre mesafe (mm)</label>
+                        <input type="number" id="corpusDistanceValue" placeholder="mm veya >5" step="0.1">
+                    </div>
+                </div>
+
+                <div class="subsection">
+                    <h3>Sirkumferensiyal Şaft Sınırı</h3>
+                    <div class="option-group">
+                        <button class="option-button" data-value="shaftNegative">Negatif</button>
+                        <button class="option-button" data-value="shaftCarcinoma">İnvaziv karsinom ile pozitif</button>
+                    </div>
+                    <div id="shaftDistance" style="display: none;">
+                        <label>İnvaziv tümöre mesafe (mm)</label>
+                        <input type="number" id="shaftDistanceValue" placeholder="mm veya >5" step="0.1">
+                    </div>
+                </div>
+
+                <div class="subsection">
+                    <h3>Periferik Kutanöz Sınır</h3>
+                    <div class="option-group">
+                        <button class="option-button" data-value="cutaneousNegative">Negatif</button>
+                        <button class="option-button" data-value="cutaneousPeIN">PeIN ile pozitif</button>
+                        <button class="option-button" data-value="cutaneousCarcinoma">İnvaziv karsinom ile pozitif</button>
+                    </div>
+                    <div id="cutaneousDistance" style="display: none;">
+                        <label>İnvaziv tümöre mesafe (mm)</label>
+                        <input type="number" id="cutaneousDistanceValue" placeholder="mm veya >5" step="0.1">
+                    </div>
+                </div>
+
+                <div class="subsection">
+                    <h3>Periferik Glans Sınırı</h3>
+                    <div class="option-group">
+                        <button class="option-button" data-value="glansNegative">Negatif</button>
+                        <button class="option-button" data-value="glansPeIN">PeIN ile pozitif</button>
+                        <button class="option-button" data-value="glansCarcinoma">İnvaziv karsinom ile pozitif</button>
+                    </div>
+                    <div id="glansDistance" style="display: none;">
+                        <label>İnvaziv tümöre mesafe (mm)</label>
+                        <input type="number" id="glansDistanceValue" placeholder="mm veya >5" step="0.1">
+                    </div>
+                </div>
+
+                <div class="subsection">
+                    <h3>Derin Yumuşak Doku Sınırları</h3>
+                    <div class="option-group">
+                        <button class="option-button" data-value="deepNegative">Negatif</button>
+                        <button class="option-button" data-value="deepCarcinoma">İnvaziv karsinom ile pozitif</button>
+                    </div>
+                    <div id="deepDistance" style="display: none;">
+                        <label>İnvaziv tümöre mesafe (mm)</label>
+                        <input type="number" id="deepDistanceValue" placeholder="mm veya >5" step="0.1">
+                    </div>
+                </div>
+            </div>
+
+            <div class="section">
+                <h2>Lenf Nodu Durumu</h2>
+                
+                <div class="subsection">
+                    <h3>İnguinal Nodlar - Sentinel</h3>
+                    <h4>Sol</h4>
+                    <div class="form-group">
+                        <label>İncelenen lenf nodu sayısı</label>
+                        <input type="number" id="leftSentinelTotal" min="0" placeholder="0">
+                    </div>
+                    <div class="form-group">
+                        <label>Metastatik lenf nodu sayısı</label>
+                        <input type="number" id="leftSentinelPositive" min="0" placeholder="0">
+                    </div>
+                    <div id="leftSentinelDetails" style="display: none;">
+                        <div class="form-group">
+                            <label>En büyük metastaz boyutu (mm)</label>
+                            <input type="number" id="leftSentinelSize" step="0.1" placeholder="mm">
+                        </div>
+                        <div class="form-group">
+                            <label>Ekstranodal yayılım</label>
+                            <div class="option-group">
+                                <button class="option-button" data-value="present">Mevcut</button>
+                                <button class="option-button" data-value="absent">Yok</button>
+                                <button class="option-button" data-value="indeterminate">Belirsiz</button>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <h4>Sağ</h4>
+                    <div class="form-group">
+                        <label>İncelenen lenf nodu sayısı</label>
+                        <input type="number" id="rightSentinelTotal" min="0" placeholder="0">
+                    </div>
+                    <div class="form-group">
+                        <label>Metastatik lenf nodu sayısı</label>
+                        <input type="number" id="rightSentinelPositive" min="0" placeholder="0">
+                    </div>
+                    <div id="rightSentinelDetails" style="display: none;">
+                        <div class="form-group">
+                            <label>En büyük metastaz boyutu (mm)</label>
+                            <input type="number" id="rightSentinelSize" step="0.1" placeholder="mm">
+                        </div>
+                        <div class="form-group">
+                            <label>Ekstranodal yayılım</label>
+                            <div class="option-group">
+                                <button class="option-button" data-value="present">Mevcut</button>
+                                <button class="option-button" data-value="absent">Yok</button>
+                                <button class="option-button" data-value="indeterminate">Belirsiz</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="subsection">
+                    <h3>İnguinal Nodlar - Non-sentinel</h3>
+                    <h4>Sol</h4>
+                    <div class="form-group">
+                        <label>İncelenen lenf nodu sayısı</label>
+                        <input type="number" id="leftInguinalTotal" min="0" placeholder="0">
+                    </div>
+                    <div class="form-group">
+                        <label>Metastatik lenf nodu sayısı</label>
+                        <input type="number" id="leftInguinalPositive" min="0" placeholder="0">
+                    </div>
+                    
+                    <h4>Sağ</h4>
+                    <div class="form-group">
+                        <label>İncelenen lenf nodu sayısı</label>
+                        <input type="number" id="rightInguinalTotal" min="0" placeholder="0">
+                    </div>
+                    <div class="form-group">
+                        <label>Metastatik lenf nodu sayısı</label>
+                        <input type="number" id="rightInguinalPositive" min="0" placeholder="0">
+                    </div>
+                </div>
+
+                <div class="subsection">
+                    <h3>Pelvik Nodlar</h3>
+                    <h4>Sol</h4>
+                    <div class="form-group">
+                        <label>İncelenen lenf nodu sayısı</label>
+                        <input type="number" id="leftPelvicTotal" min="0" placeholder="0">
+                    </div>
+                    <div class="form-group">
+                        <label>Metastatik lenf nodu sayısı</label>
+                        <input type="number" id="leftPelvicPositive" min="0" placeholder="0">
+                    </div>
+                    
+                    <h4>Sağ</h4>
+                    <div class="form-group">
+                        <label>İncelenen lenf nodu sayısı</label>
+                        <input type="number" id="rightPelvicTotal" min="0" placeholder="0">
+                    </div>
+                    <div class="form-group">
+                        <label>Metastatik lenf nodu sayısı</label>
+                        <input type="number" id="rightPelvicPositive" min="0" placeholder="0">
+                    </div>
+                </div>
+            </div>
+
+            <div class="section">
+                <h2>Ek İncelemeler</h2>
+                <div class="option-group multi-select">
+                    <button class="option-button" data-value="p16">p16</button>
+                    <button class="option-button" data-value="p53">p53</button>
+                    <button class="option-button" data-value="ki67">Ki-67</button>
+                    <button class="option-button" data-value="cytokeratin">Sitokeratin/EMA</button>
+                    <button class="option-button" data-value="pdl1">PD-L1</button>
+                </div>
+                <div id="ancillaryDetails" style="display: none;">
+                    <textarea id="ancillaryResults" rows="3" placeholder="Test sonuçlarını giriniz..."></textarea>
+                </div>
+            </div>
+
+            <div class="section">
+                <h2>Eşlik Eden Patoloji</h2>
+                <div class="option-group multi-select">
+                    <button class="option-button" data-value="lichenSclerosus">Liken sklerozus</button>
+                    <button class="option-button" data-value="otherPathology">Diğer</button>
+                </div>
+                <div id="pathologyDetails" style="display: none;">
+                    <textarea id="pathologyDetailsText" rows="2" placeholder="Diğer patolojileri belirtiniz..."></textarea>
+                </div>
+            </div>
+
+            <div class="section">
+                <h2>Patolojik Evreleme (AJCC/UICC TNM 8. Edisyon)</h2>
+                <div id="stageSuggestion" class="stage-suggestion" style="display: none;">
+                    <strong>Önerilen Evre:</strong> <span id="suggestedStage"></span>
+                </div>
+                
+                <div class="subsection">
+                    <h3>Penis ve Sünnet Derisi</h3>
+                    <div class="form-group">
+                        <label>pT</label>
+                        <div class="option-group">
+                            <button class="option-button" data-value="pTis">pTis</button>
+                            <button class="option-button" data-value="pTa">pTa</button>
+                            <button class="option-button" data-value="pT1a">pT1a</button>
+                            <button class="option-button" data-value="pT1b">pT1b</button>
+                            <button class="option-button" data-value="pT2">pT2</button>
+                            <button class="option-button" data-value="pT3">pT3</button>
+                            <button class="option-button" data-value="pT4">pT4</button>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="subsection">
+                    <h3>Penil Üretra</h3>
+                    <div class="form-group">
+                        <label>pT</label>
+                        <div class="option-group">
+                            <button class="option-button" data-value="pTisUrethra">pTis</button>
+                            <button class="option-button" data-value="pTaUrethra">pTa</button>
+                            <button class="option-button" data-value="pT1Urethra">pT1</button>
+                            <button class="option-button" data-value="pT2Urethra">pT2</button>
+                            <button class="option-button" data-value="pT3Urethra">pT3</button>
+                            <button class="option-button" data-value="pT4Urethra">pT4</button>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="form-group">
+                    <label>pN</label>
+                    <div class="option-group">
+                        <button class="option-button" data-value="pN0">pN0</button>
+                        <button class="option-button" data-value="pN1">pN1</button>
+                        <button class="option-button" data-value="pN2">pN2</button>
+                        <button class="option-button" data-value="pN3">pN3</button>
+                    </div>
+                </div>
+                
+                <div class="form-group">
+                    <label>TNM Tanımlayıcıları</label>
+                    <div class="option-group multi-select">
+                        <button class="option-button" data-value="m">m - Multipl primer tümör</button>
+                        <button class="option-button" data-value="r">r - Nüks</button>
+                        <button class="option-button" data-value="y">y - Tedavi sonrası</button>
+                    </div>
+                </div>
+            </div>
+
+            <div class="section">
+                <h2>Ek Notlar</h2>
+                <textarea id="additionalNotes" rows="4" placeholder="Ek açıklamalar veya notlar..."></textarea>
+            </div>
+        </div>
+
+        <div class="report-section">
+            <div class="report-header">
+                <h2>Rapor Önizleme</h2>
+                <button class="copy-button" onclick="copyReport()">Raporu Kopyala</button>
+            </div>
+            <div class="report-content" id="reportContent">
+                Rapor oluşturuluyor...
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Global state
+        const state = {
+            clinical: new Set(),
+            procedures: new Set(),
+            tumorLocations: new Set(),
+            tumorType: null,
+            invasionDepth: null,
+            grade: null,
+            invasionPattern: null,
+            lvi: null,
+            pni: null,
+            pein: null,
+            peinType: null,
+            margins: {},
+            lymphNodes: {},
+            ancillary: new Set(),
+            pathology: new Set(),
+            stage: {},
+            tnmDescriptors: new Set()
+        };
+
+        // Initialize event listeners
+        document.addEventListener('DOMContentLoaded', function() {
+            // Text inputs
+            document.querySelectorAll('input[type="text"], input[type="number"], input[type="date"], textarea').forEach(input => {
+                input.addEventListener('input', updateReport);
+            });
+
+            // Option buttons
+            document.querySelectorAll('.option-button').forEach(button => {
+                button.addEventListener('click', handleOptionClick);
+            });
+
+            // Special handlers
+            document.querySelectorAll('[data-value="lymphadenectomy"]').forEach(btn => {
+                btn.addEventListener('click', () => {
+                    document.getElementById('lymphNodeDetails').style.display = 
+                        btn.classList.contains('selected') ? 'block' : 'none';
+                });
+            });
+
+            document.querySelectorAll('[data-value="multifocal"]').forEach(btn => {
+                btn.addEventListener('click', () => {
+                    document.getElementById('tumorCount').style.display = 
+                        btn.classList.contains('selected') ? 'block' : 'none';
+                });
+            });
+
+            document.querySelectorAll('[data-value="peinPresent"]').forEach(btn => {
+                btn.addEventListener('click', () => {
+                    document.getElementById('peinType').style.display = 
+                        btn.classList.contains('selected') ? 'block' : 'none';
+                });
+            });
+
+            // Margin distance handlers
+            setupMarginHandlers();
+
+            // Lymph node handlers
+            setupLymphNodeHandlers();
+
+            // Clinical details
+            document.querySelectorAll('.section:first-of-type .option-button').forEach(btn => {
+                btn.addEventListener('click', () => {
+                    const hasSelection = document.querySelector('.section:first-of-type .option-button.selected');
+                    document.getElementById('clinicalDetails').style.display = hasSelection ? 'block' : 'none';
+                });
+            });
+
+            // Ancillary studies
+            document.querySelectorAll('[data-value="p16"], [data-value="p53"], [data-value="ki67"], [data-value="cytokeratin"], [data-value="pdl1"]').forEach(btn => {
+                btn.addEventListener('click', () => {
+                    const hasSelection = document.querySelector('[data-value="p16"].selected, [data-value="p53"].selected, [data-value="ki67"].selected, [data-value="cytokeratin"].selected, [data-value="pdl1"].selected');
+                    document.getElementById('ancillaryDetails').style.display = hasSelection ? 'block' : 'none';
+                });
+            });
+
+            // Pathology details
+            document.querySelectorAll('[data-value="otherPathology"]').forEach(btn => {
+                btn.addEventListener('click', () => {
+                    document.getElementById('pathologyDetails').style.display = 
+                        btn.classList.contains('selected') ? 'block' : 'none';
+                });
+            });
+
+            // Initial report
+            updateReport();
+        });
+
+        function handleOptionClick(e) {
+            const button = e.target;
+            const parent = button.parentElement;
+            const isMultiSelect = parent.classList.contains('multi-select');
+            
+            if (isMultiSelect) {
+                button.classList.toggle('selected');
+            } else {
+                parent.querySelectorAll('.option-button').forEach(btn => {
+                    btn.classList.remove('selected');
+                });
+                button.classList.add('selected');
+            }
+            
+            updateReport();
+            suggestStage();
+        }
+
+        function setupMarginHandlers() {
+            const marginTypes = [
+                { type: 'urethral', negative: 'urethralNegative' },
+                { type: 'proxUrethral', negative: 'proxUrethralNegative' },
+                { type: 'periUrethral', negative: 'periUrethralNegative' },
+                { type: 'corpus', negative: 'corpusNegative' },
+                { type: 'shaft', negative: 'shaftNegative' },
+                { type: 'cutaneous', negative: 'cutaneousNegative' },
+                { type: 'glans', negative: 'glansNegative' },
+                { type: 'deep', negative: 'deepNegative' }
+            ];
+
+            marginTypes.forEach(margin => {
+                const negativeBtn = document.querySelector(`[data-value="${margin.negative}"]`);
+                if (negativeBtn) {
+                    negativeBtn.addEventListener('click', () => {
+                        document.getElementById(`${margin.type}Distance`).style.display = 
+                            negativeBtn.classList.contains('selected') ? 'block' : 'none';
+                    });
+                }
+            });
+        }
+
+        function setupLymphNodeHandlers() {
+            const nodeInputs = [
+                'leftSentinelPositive', 'rightSentinelPositive',
+                'leftInguinalPositive', 'rightInguinalPositive',
+                'leftPelvicPositive', 'rightPelvicPositive'
+            ];
+
+            nodeInputs.forEach(inputId => {
+                const input = document.getElementById(inputId);
+                if (input) {
+                    input.addEventListener('input', () => {
+                        if (inputId.includes('Sentinel')) {
+                            const side = inputId.includes('left') ? 'left' : 'right';
+                            const detailsDiv = document.getElementById(`${side}SentinelDetails`);
+                            if (detailsDiv) {
+                                detailsDiv.style.display = input.value > 0 ? 'block' : 'none';
+                            }
+                        }
+                        suggestStage();
+                    });
+                }
+            });
+        }
+
+        function suggestStage() {
+            let suggestedT = '';
+            let suggestedN = '';
+
+            // T staging logic
+            const selectedInvasion = document.querySelector('.option-button[data-value*="Invasion"].selected');
+            const selectedGrade = document.querySelector('.option-button[data-value^="g"].selected');
+            const lvi = document.querySelector('[data-value="lviPresent"].selected');
+            const pni = document.querySelector('[data-value="pniPresent"].selected');
+
+            if (selectedInvasion) {
+                const invasionValue = selectedInvasion.dataset.value;
+                
+                if (invasionValue === 'noInvasion') {
+                    suggestedT = 'pTis';
+                } else if (invasionValue === 'subepithelial') {
+                    if (selectedGrade?.dataset.value === 'g3' || lvi || pni) {
+                        suggestedT = 'pT1b';
+                    } else {
+                        suggestedT = 'pT1a';
+                    }
+                } else if (invasionValue === 'corpusSpongiosum') {
+                    suggestedT = 'pT2';
+                } else if (invasionValue === 'corpusCavernosum') {
+                    suggestedT = 'pT3';
+                } else if (invasionValue === 'adjacentStructures') {
+                    suggestedT = 'pT4';
+                }
+            }
+
+            // N staging logic
+            let totalPositiveNodes = 0;
+            let hasExtranodal = false;
+            let hasPelvic = false;
+
+            ['leftSentinel', 'rightSentinel', 'leftInguinal', 'rightInguinal', 'leftPelvic', 'rightPelvic'].forEach(prefix => {
+                const positiveInput = document.getElementById(`${prefix}Positive`);
+                if (positiveInput && positiveInput.value) {
+                    const count = parseInt(positiveInput.value);
+                    totalPositiveNodes += count;
+                    if (prefix.includes('Pelvic') && count > 0) {
+                        hasPelvic = true;
+                    }
+                }
+            });
+
+            if (totalPositiveNodes === 0) {
+                suggestedN = 'pN0';
+            } else if (hasPelvic || hasExtranodal) {
+                suggestedN = 'pN3';
+            } else if (totalPositiveNodes <= 2) {
+                suggestedN = 'pN1';
+            } else {
+                suggestedN = 'pN2';
+            }
+
+            // Display suggestion
+            if (suggestedT || suggestedN) {
+                const suggestionDiv = document.getElementById('stageSuggestion');
+                const suggestedStageSpan = document.getElementById('suggestedStage');
+                
+                suggestionDiv.style.display = 'block';
+                suggestedStageSpan.textContent = `${suggestedT || ''}${suggestedN || ''}`;
+            }
+        }
+
+        function updateReport() {
+            const report = [];
+            
+            // Header
+            report.push('PENİS VE DİSTAL ÜRETRA KARSİNOMU HİSTOPATOLOJİ RAPORU');
+            report.push('═'.repeat(60));
+            report.push('');
+            
+            // Patient info
+            const name = document.getElementById('patientName').value;
+            const birthDate = document.getElementById('birthDate').value;
+            const protocol = document.getElementById('protocolNumber').value;
+            const requestDate = document.getElementById('requestDate').value;
+            
+            if (name || protocol) {
+                report.push('HASTA BİLGİLERİ');
+                if (name) report.push(`Hasta Adı: ${name}`);
+                if (birthDate) report.push(`Doğum Tarihi: ${formatDate(birthDate)}`);
+                if (protocol) report.push(`Protokol No: ${protocol}`);
+                if (requestDate) report.push(`İstem Tarihi: ${formatDate(requestDate)}`);
+                report.push('');
+            }
+
+            // Clinical info
+            const clinicalButtons = document.querySelectorAll('.section:nth-of-type(2) .option-button.selected');
+            if (clinicalButtons.length > 0) {
+                report.push('KLİNİK BİLGİLER');
+                clinicalButtons.forEach(btn => {
+                    const labels = {
+                        'previousCancer': 'Önceki penis/üretra kanseri öyküsü',
+                        'previousTherapy': 'Önceki tedavi',
+                        'previousHPV': 'Önceki HPV enfeksiyonu',
+                        'otherClinical': 'Diğer klinik bilgi'
+                    };
+                    report.push(`• ${labels[btn.dataset.value]}`);
+                });
+                const clinicalDetails = document.getElementById('clinicalDetailsText').value;
+                if (clinicalDetails) {
+                    report.push(`  Detay: ${clinicalDetails}`);
+                }
+                report.push('');
+            }
+
+            // Operative procedure
+            const procedures = document.querySelectorAll('.section:nth-of-type(3) .option-button.selected');
+            if (procedures.length > 0) {
+                report.push('OPERATİF PROSEDÜR');
+                procedures.forEach(btn => {
+                    const labels = {
+                        'partialPenectomy': 'Parsiyel penektomi',
+                        'radicalPenectomy': 'Radikal penektomi',
+                        'glansPreserving': 'Glans koruyucu',
+                        'glansectomy': 'Glansektomi',
+                        'circumcision': 'Sünnet',
+                        'incisionalBiopsy': 'İnsizyonel/punch biyopsi',
+                        'excisionalBiopsy': 'Eksizyonel biyopsi',
+                        'urethrectomy': 'Üretrektomi',
+                        'lymphadenectomy': 'Lenfadenektomi'
+                    };
+                    report.push(`• ${labels[btn.dataset.value]}`);
+                });
+                report.push('');
+            }
+
+            // Tumor location
+            const locations = document.querySelectorAll('.section:nth-of-type(4) .option-button.selected');
+            if (locations.length > 0) {
+                report.push('TÜMÖR LOKALİZASYONU');
+                locations.forEach(btn => {
+                    const labels = {
+                        'glans': 'Glans penis',
+                        'coronalSulcus': 'Koronal sulkus',
+                        'foreskin': 'Sünnet derisi',
+                        'distalUrethra': 'Distal penil üretra',
+                        'shaft': 'Penis gövdesi/şaft'
+                    };
+                    report.push(`• ${labels[btn.dataset.value]}`);
+                });
+                report.push('');
+            }
+
+            // Tumor characteristics
+            const focality = document.querySelector('[data-value="unifocal"].selected, [data-value="multifocal"].selected');
+            const size1 = document.getElementById('tumorSize1').value;
+            const size2 = document.getElementById('tumorSize2').value;
+            const size3 = document.getElementById('tumorSize3').value;
+            
+            if (focality || size1) {
+                report.push('TÜMÖR ÖZELLİKLERİ');
+                if (focality) {
+                    report.push(`Fokalite: ${focality.dataset.value === 'unifocal' ? 'Unifokal' : 'Multifokal'}`);
+                    if (focality.dataset.value === 'multifocal') {
+                        const count = document.getElementById('tumorNumber').value;
+                        if (count) report.push(`Tümör sayısı: ${count}`);
+                    }
+                }
+                if (size1) {
+                    let sizeText = `Boyut: ${size1}`;
+                    if (size2) sizeText += ` x ${size2}`;
+                    if (size3) sizeText += ` x ${size3}`;
+                    sizeText += ' mm';
+                    report.push(sizeText);
+                }
+                report.push('');
+            }
+
+            // Histologic type
+            const tumorType = document.querySelector('.section:nth-of-type(6) .option-button.selected');
+            if (tumorType) {
+                report.push('HİSTOLOJİK TİP');
+                const typeLabels = {
+                    'basaloid': 'Bazaloid skuamöz hücreli karsinom (HPV-ilişkili)',
+                    'warty': 'Warty karsinom (HPV-ilişkili)',
+                    'clearCell': 'Clear cell skuamöz hücreli karsinom (HPV-ilişkili)',
+                    'lymphoepithelioma': 'Lenfoepitelyal karsinom (HPV-ilişkili)',
+                    'usual': 'Skuamöz hücreli karsinom, usual tip (HPV-bağımsız)',
+                    'verrucous': 'Verrüköz karsinom (HPV-bağımsız)',
+                    'papillary': 'Papiller skuamöz hücreli karsinom (HPV-bağımsız)',
+                    'sarcomatoid': 'Sarkomatoid skuamöz hücreli karsinom (HPV-bağımsız)',
+                    'mixed': 'Mikst skuamöz hücreli karsinom',
+                    'nos': 'Skuamöz hücreli karsinom, NOS'
+                };
+                report.push(typeLabels[tumorType.dataset.value]);
+                report.push('');
+            }
+
+            // Invasion depth
+            const invasion = document.querySelector('[data-value*="Invasion"].selected:not([data-value="noInvasion"]):not([data-value="noInvasionUrethra"])');
+            const thickness = document.getElementById('tumorThickness').value;
+            const depth = document.getElementById('invasionDepth').value;
+            
+            if (invasion || thickness || depth) {
+                report.push('İNVAZYON');
+                if (invasion) {
+                    const invasionLabels = {
+                        'subepithelial': 'Subepitelyal/lamina propria invazyonu',
+                        'corpusSpongiosum': 'Korpus spongiosum invazyonu',
+                        'corpusCavernosum': 'Korpus kavernozum invazyonu',
+                        'tunicaAlbuginea': 'Tunika albuginea invazyonu',
+                        'adjacentStructures': 'Komşu yapılara invazyon',
+                        'subepithelialUrethra': 'Subepitelyal/lamina propria invazyonu',
+                        'corpusSpongiosumUrethra': 'Korpus spongiosum invazyonu',
+                        'corpusCavernosumUrethra': 'Korpus kavernozum invazyonu',
+                        'adjacentStructuresUrethra': 'Komşu yapılara invazyon'
+                    };
+                    report.push(`Derinlik: ${invasionLabels[invasion.dataset.value]}`);
+                }
+                if (thickness) report.push(`Tümör kalınlığı: ${thickness} mm`);
+                if (depth) report.push(`İnvazyon derinliği: ${depth} mm`);
+                report.push('');
+            }
+
+            // Grade
+            const grade = document.querySelector('[data-value^="g"].selected, [data-value="sarcomatoid"].selected');
+            if (grade) {
+                report.push('HİSTOLOJİK DERECE');
+                const gradeLabels = {
+                    'g1': 'Grade 1 (İyi diferansiye)',
+                    'g2': 'Grade 2 (Orta diferansiye)',
+                    'g3': 'Grade 3 (Az diferansiye)',
+                    'sarcomatoid': 'Sarkomatoid alanlar mevcut'
+                };
+                report.push(gradeLabels[grade.dataset.value]);
+                report.push('');
+            }
+
+            // Invasion pattern
+            const pattern = document.querySelector('[data-value="pushing"].selected, [data-value="infiltrative"].selected');
+            if (pattern) {
+                report.push('İNVAZYON PATERNİ');
+                report.push(pattern.dataset.value === 'pushing' ? 'İtici (Pushing)' : 'İnfiltratif');
+                report.push('');
+            }
+
+            // LVI and PNI
+            const lvi = document.querySelector('[data-value^="lvi"].selected');
+            const pni = document.querySelector('[data-value^="pni"].selected');
+            
+            if (lvi || pni) {
+                report.push('İNVAZYON ÖZELLİKLERİ');
+                if (lvi) {
+                    const lviLabels = {
+                        'lviPresent': 'Lenfovasküler invazyon: Mevcut',
+                        'lviAbsent': 'Lenfovasküler invazyon: Saptanmadı',
+                        'lviIndeterminate': 'Lenfovasküler invazyon: Belirsiz'
+                    };
+                    report.push(lviLabels[lvi.dataset.value]);
+                }
+                if (pni) {
+                    const pniLabels = {
+                        'pniPresent': 'Perinöral invazyon: Mevcut',
+                        'pniAbsent': 'Perinöral invazyon: Saptanmadı',
+                        'pniIndeterminate': 'Perinöral invazyon: Belirsiz'
+                    };
+                    report.push(pniLabels[pni.dataset.value]);
+                }
+                report.push('');
+            }
+
+            // PeIN
+            const pein = document.querySelector('[data-value^="pein"].selected');
+            if (pein) {
+                report.push('İLİŞKİLİ PENİL İNTRAEPİTELYAL NEOPLAZİ (PeIN)');
+                if (pein.dataset.value === 'peinPresent') {
+                    report.push('Mevcut');
+                    const peinType = document.querySelector('[data-value="wartyBasaloid"].selected, [data-value="differentiated"].selected');
+                    if (peinType) {
+                        report.push(`Tip: ${peinType.dataset.value === 'wartyBasaloid' ? 'Warty ve/veya Bazaloid' : 'Diferansiye'}`);
+                    }
+                } else {
+                    report.push('Saptanmadı');
+                }
+                report.push('');
+            }
+
+            // Margins
+            const marginSections = [
+                { id: 'urethral', title: 'Üretral sınır' },
+                { id: 'proxUrethral', title: 'Proksimal üretral sınır' },
+                { id: 'periUrethral', title: 'Peri-üretral dokular' },
+                { id: 'corpus', title: 'Korpus kavernozum' },
+                { id: 'shaft', title: 'Sirkumferensiyal şaft sınırı' },
+                { id: 'cutaneous', title: 'Periferik kutanöz sınır' },
+                { id: 'glans', title: 'Periferik glans sınırı' },
+                { id: 'deep', title: 'Derin yumuşak doku sınırları' }
+            ];
+
+            let hasMargins = false;
+            marginSections.forEach(margin => {
+                const selected = document.querySelector(`[data-value^="${margin.id}"].selected`);
+                if (selected) hasMargins = true;
+            });
+
+            if (hasMargins) {
+                report.push('CERRAHİ SINIRLAR');
+                marginSections.forEach(margin => {
+                    const selected = document.querySelector(`[data-value^="${margin.id}"].selected`);
+                    if (selected) {
+                        let marginText = `${margin.title}: `;
+                        if (selected.dataset.value.includes('Negative')) {
+                            marginText += 'Negatif';
+                            const distance = document.getElementById(`${margin.id}DistanceValue`)?.value;
+                            if (distance) {
+                                marginText += ` (mesafe: ${distance} mm)`;
+                            }
+                        } else if (selected.dataset.value.includes('PeIN')) {
+                            marginText += 'PeIN ile pozitif';
+                        } else if (selected.dataset.value.includes('Carcinoma')) {
+                            marginText += 'İnvaziv karsinom ile pozitif';
+                        }
+                        report.push(marginText);
+                    }
+                });
+                report.push('');
+            }
+
+            // Lymph nodes
+            const nodeTypes = [
+                { prefix: 'leftSentinel', label: 'Sol inguinal sentinel' },
+                { prefix: 'rightSentinel', label: 'Sağ inguinal sentinel' },
+                { prefix: 'leftInguinal', label: 'Sol inguinal non-sentinel' },
+                { prefix: 'rightInguinal', label: 'Sağ inguinal non-sentinel' },
+                { prefix: 'leftPelvic', label: 'Sol pelvik' },
+                { prefix: 'rightPelvic', label: 'Sağ pelvik' }
+            ];
+
+            let hasNodes = false;
+            nodeTypes.forEach(node => {
+                const total = document.getElementById(`${node.prefix}Total`).value;
+                if (total && total > 0) hasNodes = true;
+            });
+
+            if (hasNodes) {
+                report.push('LENF NODU DURUMU');
+                nodeTypes.forEach(node => {
+                    const total = document.getElementById(`${node.prefix}Total`).value;
+                    const positive = document.getElementById(`${node.prefix}Positive`).value;
+                    
+                    if (total && total > 0) {
+                        report.push(`${node.label}: ${positive || 0}/${total}`);
+                        
+                        if (positive > 0 && node.prefix.includes('Sentinel')) {
+                            const size = document.getElementById(`${node.prefix}Size`)?.value;
+                            if (size) {
+                                report.push(`  En büyük metastaz: ${size} mm`);
+                            }
+                            const ene = document.querySelector(`#${node.prefix}Details .option-button.selected`);
+                            if (ene) {
+                                const eneLabels = {
+                                    'present': '  Ekstranodal yayılım: Mevcut',
+                                    'absent': '  Ekstranodal yayılım: Yok',
+                                    'indeterminate': '  Ekstranodal yayılım: Belirsiz'
+                                };
+                                report.push(eneLabels[ene.dataset.value]);
+                            }
+                        }
+                    }
+                });
+                report.push('');
+            }
+
+            // Ancillary studies
+            const ancillarySelected = document.querySelectorAll('[data-value="p16"].selected, [data-value="p53"].selected, [data-value="ki67"].selected, [data-value="cytokeratin"].selected, [data-value="pdl1"].selected');
+            if (ancillarySelected.length > 0) {
+                report.push('EK İNCELEMELER');
+                const ancillaryResults = document.getElementById('ancillaryResults').value;
+                if (ancillaryResults) {
+                    report.push(ancillaryResults);
+                } else {
+                    ancillarySelected.forEach(btn => {
+                        const labels = {
+                            'p16': 'p16',
+                            'p53': 'p53',
+                            'ki67': 'Ki-67',
+                            'cytokeratin': 'Sitokeratin/EMA',
+                            'pdl1': 'PD-L1'
+                        };
+                        report.push(`• ${labels[btn.dataset.value]}`);
+                    });
+                }
+                report.push('');
+            }
+
+            // Coexistent pathology
+            const pathologySelected = document.querySelectorAll('[data-value="lichenSclerosus"].selected, [data-value="otherPathology"].selected');
+            if (pathologySelected.length > 0) {
+                report.push('EŞLİK EDEN PATOLOJİ');
+                pathologySelected.forEach(btn => {
+                    if (btn.dataset.value === 'lichenSclerosus') {
+                        report.push('• Liken sklerozus');
+                    }
+                });
+                const otherPath = document.getElementById('pathologyDetailsText').value;
+                if (otherPath) {
+                    report.push(`• ${otherPath}`);
+                }
+                report.push('');
+            }
+
+            // Staging
+            const pT = document.querySelector('[data-value^="pT"].selected');
+            const pN = document.querySelector('[data-value^="pN"].selected');
+            const descriptors = document.querySelectorAll('[data-value="m"].selected, [data-value="r"].selected, [data-value="y"].selected');
+            
+            if (pT || pN) {
+                report.push('PATOLOJİK EVRE (AJCC/UICC TNM 8. Edisyon)');
+                let stageText = '';
+                if (descriptors.length > 0) {
+                    descriptors.forEach(d => stageText += d.dataset.value);
+                    stageText += '-';
+                }
+                if (pT) stageText += pT.dataset.value;
+                if (pN) stageText += pN.dataset.value;
+                report.push(stageText);
+                report.push('');
+            }
+
+            // Additional notes
+            const notes = document.getElementById('additionalNotes').value;
+            if (notes) {
+                report.push('EK NOTLAR');
+                report.push(notes);
+                report.push('');
+            }
+
+            // Footer
+            report.push('');
+            report.push('─'.repeat(60));
+            report.push(`Rapor tarihi: ${new Date().toLocaleDateString('tr-TR')}`);
+
+            document.getElementById('reportContent').textContent = report.join('\n');
+        }
+
+        function formatDate(dateString) {
+            if (!dateString) return '';
+            const date = new Date(dateString);
+            return date.toLocaleDateString('tr-TR');
+        }
+
+        function copyReport() {
+            const reportText = document.getElementById('reportContent').textContent;
+            navigator.clipboard.writeText(reportText).then(() => {
+                const button = document.querySelector('.copy-button');
+                const originalText = button.textContent;
+                button.textContent = 'Kopyalandı!';
+                button.style.background = '#48bb78';
+                
+                setTimeout(() => {
+                    button.textContent = originalText;
+                    button.style.background = '#4299e1';
+                }, 2000);
+            });
+        }
+    </script>
+</body>
+</html>
