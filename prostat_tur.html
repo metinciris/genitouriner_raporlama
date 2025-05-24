@@ -1,0 +1,1138 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Prostat Kanseri - TUR ve Enükleasyon Histopatoloji Rapor Sistemi</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #f0f4f8;
+            color: #1a202c;
+            line-height: 1.6;
+        }
+
+        .container {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+            padding: 20px;
+            max-width: 1600px;
+            margin: 0 auto;
+        }
+
+        .input-section {
+            background: white;
+            border-radius: 12px;
+            padding: 24px;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+            overflow-y: auto;
+            max-height: calc(100vh - 40px);
+        }
+
+        .report-section {
+            background: white;
+            border-radius: 12px;
+            padding: 24px;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+            position: sticky;
+            top: 20px;
+            max-height: calc(100vh - 40px);
+            overflow-y: auto;
+        }
+
+        h1 {
+            color: #2c5282;
+            font-size: 24px;
+            margin-bottom: 24px;
+            font-weight: 600;
+        }
+
+        h2 {
+            color: #2d3748;
+            font-size: 18px;
+            margin-top: 24px;
+            margin-bottom: 16px;
+            font-weight: 600;
+        }
+
+        h3 {
+            color: #4a5568;
+            font-size: 16px;
+            margin-top: 16px;
+            margin-bottom: 12px;
+            font-weight: 500;
+        }
+
+        .section {
+            background: #f7fafc;
+            border-radius: 8px;
+            padding: 16px;
+            margin-bottom: 16px;
+            border: 1px solid #e2e8f0;
+        }
+
+        .form-group {
+            margin-bottom: 16px;
+        }
+
+        label {
+            display: block;
+            font-weight: 500;
+            color: #4a5568;
+            margin-bottom: 8px;
+            font-size: 14px;
+        }
+
+        input[type="text"],
+        input[type="number"],
+        input[type="date"],
+        textarea {
+            width: 100%;
+            padding: 10px 12px;
+            border: 1px solid #cbd5e0;
+            border-radius: 6px;
+            font-size: 14px;
+            transition: all 0.2s;
+            font-family: 'Inter', sans-serif;
+        }
+
+        input[type="text"]:focus,
+        input[type="number"]:focus,
+        input[type="date"]:focus,
+        textarea:focus {
+            outline: none;
+            border-color: #4299e1;
+            box-shadow: 0 0 0 3px rgba(66, 153, 225, 0.1);
+        }
+
+        .option-group {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+            margin-bottom: 12px;
+        }
+
+        .option-button {
+            padding: 8px 16px;
+            border: 2px solid #cbd5e0;
+            border-radius: 6px;
+            background: white;
+            cursor: pointer;
+            transition: all 0.2s;
+            font-size: 14px;
+            font-weight: 500;
+        }
+
+        .option-button:hover {
+            border-color: #4299e1;
+            background: #ebf8ff;
+        }
+
+        .option-button.selected {
+            background: #4299e1;
+            color: white;
+            border-color: #4299e1;
+        }
+
+        .multi-select .option-button {
+            border-radius: 20px;
+        }
+
+        .multi-select .option-button.selected {
+            background: #48bb78;
+            border-color: #48bb78;
+        }
+
+        .report-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+
+        .copy-button {
+            padding: 8px 16px;
+            background: #4299e1;
+            color: white;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+            font-weight: 500;
+            transition: all 0.2s;
+        }
+
+        .copy-button:hover {
+            background: #3182ce;
+        }
+
+        .report-content {
+            font-size: 14px;
+            line-height: 1.8;
+            white-space: pre-wrap;
+            color: #2d3748;
+        }
+
+        .input-group {
+            display: flex;
+            gap: 8px;
+            align-items: center;
+        }
+
+        .input-group input {
+            flex: 1;
+        }
+
+        .unit {
+            color: #718096;
+            font-size: 14px;
+        }
+
+        .subsection {
+            margin-left: 16px;
+            padding-left: 16px;
+            border-left: 3px solid #e2e8f0;
+        }
+
+        .gleason-row {
+            display: grid;
+            grid-template-columns: 200px 1fr;
+            gap: 12px;
+            align-items: center;
+            margin-bottom: 12px;
+        }
+
+        .gleason-pattern-select {
+            display: flex;
+            gap: 8px;
+        }
+
+        .pattern-button {
+            width: 40px;
+            height: 40px;
+            border: 2px solid #cbd5e0;
+            border-radius: 6px;
+            background: white;
+            cursor: pointer;
+            font-weight: 600;
+            transition: all 0.2s;
+        }
+
+        .pattern-button:hover {
+            border-color: #4299e1;
+            background: #ebf8ff;
+        }
+
+        .pattern-button.selected {
+            background: #4299e1;
+            color: white;
+            border-color: #4299e1;
+        }
+
+        .required {
+            color: #e53e3e;
+        }
+
+        .info-box {
+            background: #ebf8ff;
+            border: 1px solid #4299e1;
+            border-radius: 6px;
+            padding: 12px;
+            margin-top: 8px;
+            font-size: 13px;
+            color: #2d3748;
+        }
+
+        .percentage-grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 8px;
+        }
+
+        .percentage-button {
+            padding: 8px 12px;
+            border: 2px solid #cbd5e0;
+            border-radius: 6px;
+            background: white;
+            cursor: pointer;
+            font-size: 13px;
+            font-weight: 500;
+            transition: all 0.2s;
+            text-align: center;
+        }
+
+        .percentage-button:hover {
+            border-color: #4299e1;
+            background: #ebf8ff;
+        }
+
+        .percentage-button.selected {
+            background: #4299e1;
+            color: white;
+            border-color: #4299e1;
+        }
+
+        @media (max-width: 768px) {
+            .container {
+                grid-template-columns: 1fr;
+            }
+            
+            .report-section {
+                position: relative;
+                top: 0;
+            }
+
+            .percentage-grid {
+                grid-template-columns: repeat(3, 1fr);
+            }
+        }
+
+        .dimension-inputs {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 8px;
+        }
+
+        .warning-box {
+            background: #fff5f5;
+            border: 1px solid #feb2b2;
+            border-radius: 6px;
+            padding: 12px;
+            margin-top: 8px;
+            font-size: 13px;
+            color: #742a2a;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="input-section">
+            <h1>Prostat Kanseri - TUR ve Enükleasyon Histopatoloji Raporu</h1>
+
+            <div class="section">
+                <h2>Hasta Bilgileri</h2>
+                <div class="form-group">
+                    <label>Hasta Adı Soyadı <span class="required">*</span></label>
+                    <input type="text" id="patientName" placeholder="Ad Soyad">
+                </div>
+                <div class="form-group">
+                    <label>Doğum Tarihi</label>
+                    <input type="date" id="birthDate">
+                </div>
+                <div class="form-group">
+                    <label>Protokol Numarası <span class="required">*</span></label>
+                    <input type="text" id="protocolNumber" placeholder="Protokol numarası">
+                </div>
+                <div class="form-group">
+                    <label>İstem Tarihi</label>
+                    <input type="date" id="requestDate">
+                </div>
+            </div>
+
+            <div class="section">
+                <h2>Klinik Bilgiler</h2>
+                <div class="option-group multi-select">
+                    <button class="option-button" data-value="previousCancer">Önceki prostat kanseri öyküsü</button>
+                    <button class="option-button" data-value="previousBiopsy">Önceki biyopsi</button>
+                    <button class="option-button" data-value="previousTherapy">Önceki tedavi</button>
+                    <button class="option-button" data-value="otherClinical">Diğer klinik bilgi</button>
+                </div>
+                <div id="clinicalDetails" style="display: none;">
+                    <textarea id="clinicalDetailsText" rows="3" placeholder="Detayları giriniz (önceki Gleason skoru/WHO Grade varsa belirtiniz)..."></textarea>
+                </div>
+                
+                <div class="form-group">
+                    <label>İşlem Öncesi Serum PSA</label>
+                    <div class="input-group">
+                        <input type="number" id="psaValue" placeholder="PSA değeri" step="0.1">
+                        <span class="unit">ng/mL</span>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label>Klinik Evre</label>
+                    <input type="text" id="clinicalStage" placeholder="Klinik evre">
+                </div>
+            </div>
+
+            <div class="section">
+                <h2>Operatif Prosedür</h2>
+                <div class="option-group">
+                    <button class="option-button" data-value="tur">Transüretral rezeksiyon (TUR-P)</button>
+                    <button class="option-button" data-value="enucleation">Enükleasyon (suprapubik/açık prostatektomi)</button>
+                    <button class="option-button" data-value="otherProcedure">Diğer</button>
+                </div>
+                <div id="otherProcedureDetails" style="display: none;">
+                    <input type="text" id="otherProcedureText" placeholder="Diğer prosedürü belirtiniz">
+                </div>
+            </div>
+
+            <div class="section">
+                <h2>Spesimen Özellikleri</h2>
+                <div class="form-group">
+                    <label>Spesimen Ağırlığı</label>
+                    <div class="input-group">
+                        <input type="number" id="specimenWeight" placeholder="Ağırlık" step="0.1">
+                        <span class="unit">gram</span>
+                    </div>
+                    <div id="weightWarning" style="display: none;" class="warning-box">
+                        Ağırlık değerlendirilemedi
+                    </div>
+                </div>
+                
+                <div id="specimenDimensions" style="display: none;">
+                    <label>Spesimen Boyutları (Sadece enükleasyon için)</label>
+                    <div class="dimension-inputs">
+                        <input type="number" id="specimenLength" placeholder="Uzunluk (mm)" step="0.1">
+                        <input type="number" id="specimenWidth" placeholder="Genişlik (mm)" step="0.1">
+                        <input type="number" id="specimenDepth" placeholder="Derinlik (mm)" step="0.1">
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <button class="option-button" data-value="weightCannot">Ağırlık değerlendirilemedi</button>
+                </div>
+            </div>
+
+            <div class="section">
+                <h2>Histolojik Tümör Tipi</h2>
+                <div class="option-group">
+                    <button class="option-button" data-value="acinar">Adenokarsinom (Asiner, usual tip)</button>
+                    <button class="option-button" data-value="otherType">Diğer</button>
+                </div>
+                <div id="otherTypeDetails" style="display: none;">
+                    <input type="text" id="otherTypeText" placeholder="Diğer tümör tipini belirtiniz">
+                </div>
+            </div>
+
+            <div class="section">
+                <h2>Histolojik Tümör Derecesi</h2>
+                
+                <div class="gleason-row">
+                    <label>Primer Patern/Derece</label>
+                    <div class="gleason-pattern-select">
+                        <button class="pattern-button" data-pattern="primary" data-value="3">≤3</button>
+                        <button class="pattern-button" data-pattern="primary" data-value="4">4</button>
+                        <button class="pattern-button" data-pattern="primary" data-value="5">5</button>
+                    </div>
+                </div>
+
+                <div class="gleason-row">
+                    <label>En Yüksek Kalan Patern/Derece</label>
+                    <div class="gleason-pattern-select">
+                        <button class="pattern-button" data-pattern="secondary" data-value="3">≤3</button>
+                        <button class="pattern-button" data-pattern="secondary" data-value="4">4</button>
+                        <button class="pattern-button" data-pattern="secondary" data-value="5">5</button>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <button class="option-button" data-value="gleasonIndeterminate">Belirlenemiyor</button>
+                    <div id="gleasonIndeterminateReason" style="display: none;">
+                        <input type="text" id="gleasonReasonText" placeholder="Nedenini belirtiniz">
+                    </div>
+                </div>
+
+                <div class="info-box" id="gleasonInfo" style="display: none;">
+                    <strong>Gleason Skoru: </strong><span id="gleasonScore"></span><br>
+                    <strong>WHO/ISUP Grade (Grade Grup): </strong><span id="isupGrade"></span>
+                </div>
+
+                <div id="gleasonPercentages" style="display: none;">
+                    <h3>Gleason Patern Yüzdeleri</h3>
+                    
+                    <div id="gleason4Percentage" style="display: none;">
+                        <label>Gleason Patern 4 Yüzdesi</label>
+                        <div class="percentage-grid">
+                            <button class="percentage-button" data-pattern="4" data-value="1-5%">1-5%</button>
+                            <button class="percentage-button" data-pattern="4" data-value="6-10%">6-10%</button>
+                            <button class="percentage-button" data-pattern="4" data-value="11-20%">11-20%</button>
+                            <button class="percentage-button" data-pattern="4" data-value="21-30%">21-30%</button>
+                            <button class="percentage-button" data-pattern="4" data-value="31-40%">31-40%</button>
+                            <button class="percentage-button" data-pattern="4" data-value="41-50%">41-50%</button>
+                        </div>
+                        <div class="form-group" style="margin-top: 8px;">
+                            <input type="number" id="gleason4Manual" placeholder="Manuel giriş (%)" min="0" max="100">
+                        </div>
+                    </div>
+
+                    <div id="gleason5Percentage" style="display: none;">
+                        <label>Gleason Patern 5 Yüzdesi</label>
+                        <div class="form-group">
+                            <input type="number" id="gleason5Manual" placeholder="Yüzde (%)" min="0" max="100">
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="section">
+                <h2>Tümör Büyüme Paterni</h2>
+                
+                <div class="subsection">
+                    <h3>İntraduktal Karsinom (IDC-P) ve/veya İnvaziv Kribriform Karsinom</h3>
+                    <div class="option-group">
+                        <button class="option-button" data-value="idcpAbsent">Saptanmadı</button>
+                        <button class="option-button" data-value="idcpPresent">Mevcut</button>
+                        <button class="option-button" data-value="idcpIndeterminate">Belirsiz</button>
+                    </div>
+                    
+                    <div id="idcpDetails" style="display: none;">
+                        <h4>IDC-P</h4>
+                        <div class="option-group">
+                            <button class="option-button" data-value="idcpNo">Yok</button>
+                            <button class="option-button" data-value="idcpYes">Var</button>
+                        </div>
+                        <div id="idcpScoring" style="display: none;">
+                            <div class="option-group">
+                                <button class="option-button" data-value="idcpIncorporated">Gleason skoruna dahil edildi</button>
+                                <button class="option-button" data-value="idcpNotIncorporated">Gleason skoruna dahil edilmedi</button>
+                            </div>
+                        </div>
+                        
+                        <h4>İnvaziv Kribriform Karsinom (Gleason skor 7 veya 8 için)</h4>
+                        <div class="option-group">
+                            <button class="option-button" data-value="iccNo">Yok</button>
+                            <button class="option-button" data-value="iccYes">Var</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="section">
+                <h2>Prostatik Dokuda Tümör Miktarı</h2>
+                
+                <div class="form-group">
+                    <label>Ölçüm Yöntemi</label>
+                    <div class="option-group">
+                        <button class="option-button" data-value="measureArea">Alan bazında</button>
+                        <button class="option-button" data-value="measureChips">Çip sayısı bazında (sadece TUR)</button>
+                    </div>
+                </div>
+
+                <div id="tumorPercentage" style="display: none;">
+                    <label>Tümör İçeren Prostatik Doku Yüzdesi</label>
+                    <div class="percentage-grid">
+                        <button class="percentage-button" data-tumor="percent" data-value="1-5%">1-5%</button>
+                        <button class="percentage-button" data-tumor="percent" data-value="6-10%">6-10%</button>
+                        <button class="percentage-button" data-tumor="percent" data-value="11-20%">11-20%</button>
+                        <button class="percentage-button" data-tumor="percent" data-value="21-30%">21-30%</button>
+                        <button class="percentage-button" data-tumor="percent" data-value="31-40%">31-40%</button>
+                        <button class="percentage-button" data-tumor="percent" data-value="41-50%">41-50%</button>
+                        <button class="percentage-button" data-tumor="percent" data-value="51-60%">51-60%</button>
+                        <button class="percentage-button" data-tumor="percent" data-value="61-70%">61-70%</button>
+                        <button class="percentage-button" data-tumor="percent" data-value="71-80%">71-80%</button>
+                        <button class="percentage-button" data-tumor="percent" data-value="81-90%">81-90%</button>
+                        <button class="percentage-button" data-tumor="percent" data-value=">90%">>90%</button>
+                    </div>
+                </div>
+            </div>
+
+            <div class="section">
+                <h2>İnvazyon Özellikleri</h2>
+                
+                <div class="subsection">
+                    <h3>Ekstraprostatik Yayılım</h3>
+                    <div class="option-group">
+                        <button class="option-button" data-value="epeAbsent">Saptanmadı</button>
+                        <button class="option-button" data-value="epePresent">Mevcut</button>
+                    </div>
+                </div>
+
+                <div class="subsection">
+                    <h3>Seminal Vezikül İnvazyonu</h3>
+                    <div class="option-group">
+                        <button class="option-button" data-value="svAbsent">Saptanmadı</button>
+                        <button class="option-button" data-value="svPresent">Mevcut</button>
+                    </div>
+                </div>
+
+                <div class="subsection">
+                    <h3>Lenfovasküler İnvazyon</h3>
+                    <div class="option-group">
+                        <button class="option-button" data-value="lviAbsent">Saptanmadı</button>
+                        <button class="option-button" data-value="lviPresent">Mevcut</button>
+                    </div>
+                </div>
+
+                <div class="subsection">
+                    <h3>Perinöral İnvazyon</h3>
+                    <div class="option-group">
+                        <button class="option-button" data-value="pniAbsent">Saptanmadı</button>
+                        <button class="option-button" data-value="pniPresent">Mevcut</button>
+                    </div>
+                </div>
+            </div>
+
+            <div class="section">
+                <h2>Eşlik Eden Patoloji</h2>
+                <div class="option-group">
+                    <button class="option-button" data-value="pathologyAbsent">Yok</button>
+                    <button class="option-button" data-value="pathologyPresent">Mevcut</button>
+                </div>
+                <div id="pathologyDetails" style="display: none;">
+                    <textarea id="pathologyDetailsText" rows="2" placeholder="Eşlik eden patolojileri belirtiniz..."></textarea>
+                </div>
+            </div>
+
+            <div class="section">
+                <h2>Ek Notlar</h2>
+                <textarea id="additionalNotes" rows="4" placeholder="Ek açıklamalar veya notlar..."></textarea>
+            </div>
+        </div>
+
+        <div class="report-section">
+            <div class="report-header">
+                <h2>Rapor Önizleme</h2>
+                <button class="copy-button" onclick="copyReport()">Raporu Kopyala</button>
+            </div>
+            <div class="report-content" id="reportContent">
+                Rapor oluşturuluyor...
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Global state
+        const state = {
+            clinical: new Set(),
+            procedure: null,
+            gleason: {
+                primary: null,
+                secondary: null,
+                indeterminate: false
+            },
+            gleasonPercentages: {
+                pattern4: null,
+                pattern5: null
+            },
+            idcp: null,
+            icc: null,
+            tumorMeasurement: null,
+            tumorPercentage: null,
+            invasions: {},
+            pathology: null
+        };
+
+        // Initialize event listeners
+        document.addEventListener('DOMContentLoaded', function() {
+            // Text inputs
+            document.querySelectorAll('input[type="text"], input[type="number"], input[type="date"], textarea').forEach(input => {
+                input.addEventListener('input', updateReport);
+            });
+
+            // Option buttons
+            document.querySelectorAll('.option-button').forEach(button => {
+                button.addEventListener('click', handleOptionClick);
+            });
+
+            // Pattern buttons (Gleason)
+            document.querySelectorAll('.pattern-button').forEach(button => {
+                button.addEventListener('click', handlePatternClick);
+            });
+
+            // Percentage buttons
+            document.querySelectorAll('.percentage-button').forEach(button => {
+                button.addEventListener('click', handlePercentageClick);
+            });
+
+            // Special handlers
+            setupSpecialHandlers();
+
+            // Initial report
+            updateReport();
+        });
+
+        function handleOptionClick(e) {
+            const button = e.target;
+            const parent = button.parentElement;
+            const isMultiSelect = parent.classList.contains('multi-select');
+            
+            if (isMultiSelect) {
+                button.classList.toggle('selected');
+            } else {
+                parent.querySelectorAll('.option-button').forEach(btn => {
+                    btn.classList.remove('selected');
+                });
+                button.classList.add('selected');
+            }
+            
+            updateReport();
+        }
+
+        function handlePatternClick(e) {
+            const button = e.target;
+            const pattern = button.dataset.pattern;
+            const value = button.dataset.value;
+            
+            // Clear other selections in same pattern
+            document.querySelectorAll(`[data-pattern="${pattern}"]`).forEach(btn => {
+                btn.classList.remove('selected');
+            });
+            
+            // Clear indeterminate if selecting pattern
+            if (document.querySelector('[data-value="gleasonIndeterminate"].selected')) {
+                document.querySelector('[data-value="gleasonIndeterminate"]').classList.remove('selected');
+                state.gleason.indeterminate = false;
+            }
+            
+            button.classList.add('selected');
+            state.gleason[pattern] = value;
+            
+            updateGleasonDisplay();
+            updateReport();
+        }
+
+        function handlePercentageClick(e) {
+            const button = e.target;
+            const parent = button.parentElement;
+            
+            // Clear other selections in same group
+            parent.querySelectorAll('.percentage-button').forEach(btn => {
+                btn.classList.remove('selected');
+            });
+            
+            button.classList.add('selected');
+            
+            // Store the selection
+            if (button.dataset.pattern) {
+                state.gleasonPercentages[`pattern${button.dataset.pattern}`] = button.dataset.value;
+            } else if (button.dataset.tumor) {
+                state.tumorPercentage = button.dataset.value;
+            }
+            
+            updateReport();
+        }
+
+        function setupSpecialHandlers() {
+            // Clinical details
+            document.querySelectorAll('[data-value="previousCancer"], [data-value="previousBiopsy"], [data-value="previousTherapy"], [data-value="otherClinical"]').forEach(btn => {
+                btn.addEventListener('click', () => {
+                    const hasSelection = document.querySelector('[data-value="previousCancer"].selected, [data-value="previousBiopsy"].selected, [data-value="previousTherapy"].selected, [data-value="otherClinical"].selected');
+                    document.getElementById('clinicalDetails').style.display = hasSelection ? 'block' : 'none';
+                });
+            });
+
+            // Procedure type
+            document.querySelector('[data-value="enucleation"]')?.addEventListener('click', function() {
+                document.getElementById('specimenDimensions').style.display = 
+                    this.classList.contains('selected') ? 'block' : 'none';
+            });
+
+            document.querySelector('[data-value="tur"]')?.addEventListener('click', function() {
+                if (this.classList.contains('selected')) {
+                    document.getElementById('specimenDimensions').style.display = 'none';
+                }
+            });
+
+            document.querySelector('[data-value="otherProcedure"]')?.addEventListener('click', function() {
+                document.getElementById('otherProcedureDetails').style.display = 
+                    this.classList.contains('selected') ? 'block' : 'none';
+            });
+
+            // Weight cannot be assessed
+            document.querySelector('[data-value="weightCannot"]')?.addEventListener('click', function() {
+                const isSelected = this.classList.contains('selected');
+                document.getElementById('weightWarning').style.display = isSelected ? 'block' : 'none';
+                if (isSelected) {
+                    document.getElementById('specimenWeight').value = '';
+                    document.getElementById('specimenWeight').disabled = true;
+                } else {
+                    document.getElementById('specimenWeight').disabled = false;
+                }
+            });
+
+            // Other tumor type
+            document.querySelector('[data-value="otherType"]')?.addEventListener('click', function() {
+                document.getElementById('otherTypeDetails').style.display = 
+                    this.classList.contains('selected') ? 'block' : 'none';
+            });
+
+            // Gleason indeterminate
+            document.querySelector('[data-value="gleasonIndeterminate"]')?.addEventListener('click', function() {
+                const isSelected = this.classList.contains('selected');
+                document.getElementById('gleasonIndeterminateReason').style.display = isSelected ? 'block' : 'none';
+                
+                if (isSelected) {
+                    // Clear pattern selections
+                    document.querySelectorAll('.pattern-button').forEach(btn => {
+                        btn.classList.remove('selected');
+                    });
+                    state.gleason.primary = null;
+                    state.gleason.secondary = null;
+                    state.gleason.indeterminate = true;
+                    document.getElementById('gleasonInfo').style.display = 'none';
+                    document.getElementById('gleasonPercentages').style.display = 'none';
+                }
+            });
+
+            // IDC-P details
+            document.querySelector('[data-value="idcpPresent"]')?.addEventListener('click', function() {
+                document.getElementById('idcpDetails').style.display = 
+                    this.classList.contains('selected') ? 'block' : 'none';
+            });
+
+            document.querySelector('[data-value="idcpAbsent"], [data-value="idcpIndeterminate"]')?.addEventListener('click', function() {
+                if (this.classList.contains('selected')) {
+                    document.getElementById('idcpDetails').style.display = 'none';
+                }
+            });
+
+            // IDC-P scoring
+            document.querySelector('[data-value="idcpYes"]')?.addEventListener('click', function() {
+                document.getElementById('idcpScoring').style.display = 
+                    this.classList.contains('selected') ? 'block' : 'none';
+            });
+
+            // Tumor measurement method
+            document.querySelectorAll('[data-value="measureArea"], [data-value="measureChips"]').forEach(btn => {
+                btn.addEventListener('click', function() {
+                    const isArea = this.dataset.value === 'measureArea';
+                    const isChips = this.dataset.value === 'measureChips';
+                    
+                    if (this.classList.contains('selected')) {
+                        document.getElementById('tumorPercentage').style.display = 'block';
+                        state.tumorMeasurement = this.dataset.value;
+                    }
+                });
+            });
+
+            // Pathology
+            document.querySelector('[data-value="pathologyPresent"]')?.addEventListener('click', function() {
+                document.getElementById('pathologyDetails').style.display = 
+                    this.classList.contains('selected') ? 'block' : 'none';
+            });
+
+            // Manual percentage inputs
+            document.getElementById('gleason4Manual')?.addEventListener('input', function() {
+                if (this.value) {
+                    document.querySelectorAll('[data-pattern="4"]').forEach(btn => {
+                        btn.classList.remove('selected');
+                    });
+                    state.gleasonPercentages.pattern4 = `${this.value}%`;
+                    updateReport();
+                }
+            });
+
+            document.getElementById('gleason5Manual')?.addEventListener('input', function() {
+                if (this.value) {
+                    state.gleasonPercentages.pattern5 = `${this.value}%`;
+                    updateReport();
+                }
+            });
+        }
+
+        function updateGleasonDisplay() {
+            const primary = state.gleason.primary;
+            const secondary = state.gleason.secondary;
+            
+            if (primary && secondary && !state.gleason.indeterminate) {
+                const score = parseInt(primary) + parseInt(secondary);
+                let gradeGroup = '';
+                let showPattern4 = false;
+                let showPattern5 = false;
+                
+                if (score <= 6) {
+                    gradeGroup = 'Grade Grup 1';
+                } else if (score === 7) {
+                    if (primary === '3' && secondary === '4') {
+                        gradeGroup = 'Grade Grup 2';
+                        showPattern4 = true;
+                    } else if (primary === '4' && secondary === '3') {
+                        gradeGroup = 'Grade Grup 3';
+                        showPattern4 = true;
+                    }
+                } else if (score === 8) {
+                    gradeGroup = 'Grade Grup 4';
+                    showPattern4 = true;
+                    showPattern5 = true;
+                } else if (score >= 9) {
+                    gradeGroup = 'Grade Grup 5';
+                    showPattern4 = true;
+                    showPattern5 = true;
+                }
+                
+                document.getElementById('gleasonInfo').style.display = 'block';
+                document.getElementById('gleasonScore').textContent = `${primary} + ${secondary} = ${score}`;
+                document.getElementById('isupGrade').textContent = gradeGroup;
+                
+                // Show percentage sections based on grade
+                document.getElementById('gleasonPercentages').style.display = (showPattern4 || showPattern5) ? 'block' : 'none';
+                document.getElementById('gleason4Percentage').style.display = showPattern4 ? 'block' : 'none';
+                document.getElementById('gleason5Percentage').style.display = showPattern5 ? 'block' : 'none';
+            } else {
+                document.getElementById('gleasonInfo').style.display = 'none';
+                document.getElementById('gleasonPercentages').style.display = 'none';
+            }
+        }
+
+        function updateReport() {
+            const report = [];
+            
+            // Header
+            report.push('PROSTAT KANSERİ - TUR VE ENÜKLEASYON HİSTOPATOLOJİ RAPORU');
+            report.push('═'.repeat(70));
+            report.push('');
+            
+            // Patient info
+            const name = document.getElementById('patientName').value;
+            const birthDate = document.getElementById('birthDate').value;
+            const protocol = document.getElementById('protocolNumber').value;
+            const requestDate = document.getElementById('requestDate').value;
+            
+            if (name || protocol) {
+                report.push('HASTA BİLGİLERİ');
+                if (name) report.push(`Hasta Adı: ${name}`);
+                if (birthDate) report.push(`Doğum Tarihi: ${formatDate(birthDate)}`);
+                if (protocol) report.push(`Protokol No: ${protocol}`);
+                if (requestDate) report.push(`İstem Tarihi: ${formatDate(requestDate)}`);
+                report.push('');
+            }
+
+            // Clinical info
+            const clinicalButtons = document.querySelectorAll('[data-value="previousCancer"].selected, [data-value="previousBiopsy"].selected, [data-value="previousTherapy"].selected, [data-value="otherClinical"].selected');
+            const psa = document.getElementById('psaValue').value;
+            const clinicalStage = document.getElementById('clinicalStage').value;
+            
+            if (clinicalButtons.length > 0 || psa || clinicalStage) {
+                report.push('KLİNİK BİLGİLER');
+                clinicalButtons.forEach(btn => {
+                    const labels = {
+                        'previousCancer': 'Önceki prostat kanseri öyküsü',
+                        'previousBiopsy': 'Önceki biyopsi',
+                        'previousTherapy': 'Önceki tedavi',
+                        'otherClinical': 'Diğer klinik bilgi'
+                    };
+                    report.push(`• ${labels[btn.dataset.value]}`);
+                });
+                const clinicalDetails = document.getElementById('clinicalDetailsText').value;
+                if (clinicalDetails) {
+                    report.push(`  Detay: ${clinicalDetails}`);
+                }
+                if (psa) {
+                    report.push(`İşlem öncesi serum PSA: ${psa} ng/mL`);
+                }
+                if (clinicalStage) {
+                    report.push(`Klinik evre: ${clinicalStage}`);
+                }
+                report.push('');
+            }
+
+            // Operative procedure
+            const procedure = document.querySelector('[data-value="tur"].selected, [data-value="enucleation"].selected, [data-value="otherProcedure"].selected');
+            if (procedure) {
+                report.push('OPERATİF PROSEDÜR');
+                const procLabels = {
+                    'tur': 'Transüretral rezeksiyon (TUR-P)',
+                    'enucleation': 'Enükleasyon (suprapubik/açık prostatektomi)',
+                    'otherProcedure': 'Diğer'
+                };
+                report.push(procLabels[procedure.dataset.value]);
+                if (procedure.dataset.value === 'otherProcedure') {
+                    const otherProc = document.getElementById('otherProcedureText').value;
+                    if (otherProc) report.push(`  ${otherProc}`);
+                }
+                report.push('');
+            }
+
+            // Specimen characteristics
+            const weight = document.getElementById('specimenWeight').value;
+            const weightCannot = document.querySelector('[data-value="weightCannot"].selected');
+            const length = document.getElementById('specimenLength').value;
+            const width = document.getElementById('specimenWidth').value;
+            const depth = document.getElementById('specimenDepth').value;
+            
+            if (weight || weightCannot || length) {
+                report.push('SPESİMEN ÖZELLİKLERİ');
+                if (weightCannot) {
+                    report.push('Ağırlık: Değerlendirilemedi');
+                } else if (weight) {
+                    report.push(`Ağırlık: ${weight} gram`);
+                }
+                if (length && width && depth) {
+                    report.push(`Boyutlar: ${length} × ${width} × ${depth} mm`);
+                }
+                report.push('');
+            }
+
+            // Histologic type
+            const tumorType = document.querySelector('[data-value="acinar"].selected, [data-value="otherType"].selected');
+            if (tumorType) {
+                report.push('HİSTOLOJİK TÜMÖR TİPİ');
+                if (tumorType.dataset.value === 'acinar') {
+                    report.push('Adenokarsinom (Asiner, usual tip)');
+                } else {
+                    const otherType = document.getElementById('otherTypeText').value;
+                    report.push(otherType || 'Diğer');
+                }
+                report.push('');
+            }
+
+            // Gleason score
+            const indeterminate = document.querySelector('[data-value="gleasonIndeterminate"].selected');
+            
+            if (state.gleason.primary && state.gleason.secondary && !indeterminate) {
+                report.push('HİSTOLOJİK TÜMÖR DERECESİ');
+                
+                const primary = state.gleason.primary;
+                const secondary = state.gleason.secondary;
+                const score = parseInt(primary) + parseInt(secondary);
+                
+                report.push(`Gleason skoru: ${primary} + ${secondary} = ${score}`);
+                
+                // WHO/ISUP Grade
+                let gradeGroup = '';
+                if (score <= 6) {
+                    gradeGroup = 'WHO/ISUP Grade (Grade Grup) 1';
+                } else if (score === 7) {
+                    if (primary === '3' && secondary === '4') {
+                        gradeGroup = 'WHO/ISUP Grade (Grade Grup) 2';
+                    } else if (primary === '4' && secondary === '3') {
+                        gradeGroup = 'WHO/ISUP Grade (Grade Grup) 3';
+                    }
+                } else if (score === 8) {
+                    gradeGroup = 'WHO/ISUP Grade (Grade Grup) 4';
+                } else if (score >= 9) {
+                    gradeGroup = 'WHO/ISUP Grade (Grade Grup) 5';
+                }
+                report.push(gradeGroup);
+                
+                // Pattern percentages
+                if (state.gleasonPercentages.pattern4) {
+                    report.push(`Gleason patern 4 yüzdesi: ${state.gleasonPercentages.pattern4}`);
+                }
+                if (state.gleasonPercentages.pattern5) {
+                    report.push(`Gleason patern 5 yüzdesi: ${state.gleasonPercentages.pattern5}`);
+                }
+                
+                report.push('');
+            } else if (indeterminate) {
+                report.push('HİSTOLOJİK TÜMÖR DERECESİ');
+                report.push('Belirlenemiyor');
+                const reason = document.getElementById('gleasonReasonText').value;
+                if (reason) {
+                    report.push(`Neden: ${reason}`);
+                }
+                report.push('');
+            }
+
+            // Tumor growth pattern
+            const idcpStatus = document.querySelector('[data-value^="idcp"].selected');
+            if (idcpStatus) {
+                report.push('TÜMÖR BÜYÜME PATERNİ');
+                
+                if (idcpStatus.dataset.value === 'idcpAbsent') {
+                    report.push('İntraduktal karsinom (IDC-P) ve/veya invaziv kribriform karsinom: Saptanmadı');
+                } else if (idcpStatus.dataset.value === 'idcpPresent') {
+                    report.push('İntraduktal karsinom (IDC-P) ve/veya invaziv kribriform karsinom: Mevcut');
+                    
+                    const idcpPresent = document.querySelector('[data-value="idcpYes"].selected');
+                    const iccPresent = document.querySelector('[data-value="iccYes"].selected');
+                    
+                    if (idcpPresent) {
+                        report.push('  IDC-P: Var');
+                        const scoring = document.querySelector('[data-value^="idcpIncorporated"], [data-value^="idcpNotIncorporated"]');
+                        if (scoring && scoring.classList.contains('selected')) {
+                            report.push(`    ${scoring.dataset.value === 'idcpIncorporated' ? 'Gleason skoruna dahil edildi' : 'Gleason skoruna dahil edilmedi'}`);
+                        }
+                    }
+                    if (iccPresent) {
+                        report.push('  İnvaziv kribriform karsinom: Var');
+                    }
+                } else {
+                    report.push('İntraduktal karsinom (IDC-P) ve/veya invaziv kribriform karsinom: Belirsiz');
+                }
+                report.push('');
+            }
+
+            // Tumor quantification
+            if (state.tumorMeasurement && state.tumorPercentage) {
+                report.push('PROSTATİK DOKUDA TÜMÖR MİKTARI');
+                const measureLabel = state.tumorMeasurement === 'measureArea' ? 'Alan bazında' : 'Çip sayısı bazında';
+                report.push(`Ölçüm yöntemi: ${measureLabel}`);
+                report.push(`Tümör içeren prostatik doku: ${state.tumorPercentage}`);
+                report.push('');
+            }
+
+            // Invasions
+            const epe = document.querySelector('[data-value="epePresent"].selected, [data-value="epeAbsent"].selected');
+            const sv = document.querySelector('[data-value="svPresent"].selected, [data-value="svAbsent"].selected');
+            const lvi = document.querySelector('[data-value="lviPresent"].selected, [data-value="lviAbsent"].selected');
+            const pni = document.querySelector('[data-value="pniPresent"].selected, [data-value="pniAbsent"].selected');
+            
+            if (epe || sv || lvi || pni) {
+                report.push('İNVAZYON ÖZELLİKLERİ');
+                
+                if (epe) {
+                    report.push(`Ekstraprostatik yayılım: ${epe.dataset.value === 'epePresent' ? 'Mevcut' : 'Saptanmadı'}`);
+                }
+                if (sv) {
+                    report.push(`Seminal vezikül invazyonu: ${sv.dataset.value === 'svPresent' ? 'Mevcut' : 'Saptanmadı'}`);
+                }
+                if (lvi) {
+                    report.push(`Lenfovasküler invazyon: ${lvi.dataset.value === 'lviPresent' ? 'Mevcut' : 'Saptanmadı'}`);
+                }
+                if (pni) {
+                    report.push(`Perinöral invazyon: ${pni.dataset.value === 'pniPresent' ? 'Mevcut' : 'Saptanmadı'}`);
+                }
+                report.push('');
+            }
+
+            // Coexistent pathology
+            const pathology = document.querySelector('[data-value="pathologyPresent"].selected, [data-value="pathologyAbsent"].selected');
+            if (pathology) {
+                report.push('EŞLİK EDEN PATOLOJİ');
+                if (pathology.dataset.value === 'pathologyAbsent') {
+                    report.push('Yok');
+                } else {
+                    const details = document.getElementById('pathologyDetailsText').value;
+                    report.push(details || 'Mevcut');
+                }
+                report.push('');
+            }
+
+            // Additional notes
+            const notes = document.getElementById('additionalNotes').value;
+            if (notes) {
+                report.push('EK NOTLAR');
+                report.push(notes);
+                report.push('');
+            }
+
+            // Footer
+            report.push('');
+            report.push('─'.repeat(70));
+            report.push(`Rapor tarihi: ${new Date().toLocaleDateString('tr-TR')}`);
+
+            document.getElementById('reportContent').textContent = report.join('\n');
+        }
+
+        function formatDate(dateString) {
+            if (!dateString) return '';
+            const date = new Date(dateString);
+            return date.toLocaleDateString('tr-TR');
+        }
+
+        function copyReport() {
+            const reportText = document.getElementById('reportContent').textContent;
+            navigator.clipboard.writeText(reportText).then(() => {
+                const button = document.querySelector('.copy-button');
+                const originalText = button.textContent;
+                button.textContent = 'Kopyalandı!';
+                button.style.background = '#48bb78';
+                
+                setTimeout(() => {
+                    button.textContent = originalText;
+                    button.style.background = '#4299e1';
+                }, 2000);
+            });
+        }
+    </script>
+</body>
+</html>
