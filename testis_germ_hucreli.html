@@ -1,0 +1,1253 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Testis Germ Hücreli Tümör Histopatoloji Rapor Sistemi</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #f0f4f8;
+            color: #1a202c;
+            line-height: 1.6;
+        }
+
+        .container {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+            padding: 20px;
+            max-width: 1600px;
+            margin: 0 auto;
+        }
+
+        .input-section {
+            background: white;
+            border-radius: 12px;
+            padding: 24px;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+            overflow-y: auto;
+            max-height: calc(100vh - 40px);
+        }
+
+        .report-section {
+            background: white;
+            border-radius: 12px;
+            padding: 24px;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+            position: sticky;
+            top: 20px;
+            max-height: calc(100vh - 40px);
+            overflow-y: auto;
+        }
+
+        h1 {
+            color: #2c5282;
+            font-size: 24px;
+            margin-bottom: 24px;
+            font-weight: 600;
+        }
+
+        h2 {
+            color: #2d3748;
+            font-size: 18px;
+            margin-top: 24px;
+            margin-bottom: 16px;
+            font-weight: 600;
+        }
+
+        h3 {
+            color: #4a5568;
+            font-size: 16px;
+            margin-top: 16px;
+            margin-bottom: 12px;
+            font-weight: 500;
+        }
+
+        .section {
+            background: #f7fafc;
+            border-radius: 8px;
+            padding: 16px;
+            margin-bottom: 16px;
+            border: 1px solid #e2e8f0;
+        }
+
+        .form-group {
+            margin-bottom: 16px;
+        }
+
+        label {
+            display: block;
+            font-weight: 500;
+            color: #4a5568;
+            margin-bottom: 8px;
+            font-size: 14px;
+        }
+
+        input[type="text"],
+        input[type="number"],
+        input[type="date"],
+        textarea {
+            width: 100%;
+            padding: 10px 12px;
+            border: 1px solid #cbd5e0;
+            border-radius: 6px;
+            font-size: 14px;
+            transition: all 0.2s;
+            font-family: 'Inter', sans-serif;
+        }
+
+        input[type="text"]:focus,
+        input[type="number"]:focus,
+        input[type="date"]:focus,
+        textarea:focus {
+            outline: none;
+            border-color: #4299e1;
+            box-shadow: 0 0 0 3px rgba(66, 153, 225, 0.1);
+        }
+
+        .option-group {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+            margin-bottom: 12px;
+        }
+
+        .option-button {
+            padding: 8px 16px;
+            border: 2px solid #cbd5e0;
+            border-radius: 6px;
+            background: white;
+            cursor: pointer;
+            transition: all 0.2s;
+            font-size: 14px;
+            font-weight: 500;
+        }
+
+        .option-button:hover {
+            border-color: #4299e1;
+            background: #ebf8ff;
+        }
+
+        .option-button.selected {
+            background: #4299e1;
+            color: white;
+            border-color: #4299e1;
+        }
+
+        .multi-select .option-button {
+            border-radius: 20px;
+        }
+
+        .multi-select .option-button.selected {
+            background: #48bb78;
+            border-color: #48bb78;
+        }
+
+        .report-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+
+        .copy-button {
+            padding: 8px 16px;
+            background: #4299e1;
+            color: white;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+            font-weight: 500;
+            transition: all 0.2s;
+        }
+
+        .copy-button:hover {
+            background: #3182ce;
+        }
+
+        .report-content {
+            font-size: 14px;
+            line-height: 1.8;
+            white-space: pre-wrap;
+            color: #2d3748;
+        }
+
+        .input-group {
+            display: flex;
+            gap: 8px;
+            align-items: center;
+        }
+
+        .input-group input {
+            flex: 1;
+        }
+
+        .unit {
+            color: #718096;
+            font-size: 14px;
+        }
+
+        .subsection {
+            margin-left: 16px;
+            padding-left: 16px;
+            border-left: 3px solid #e2e8f0;
+        }
+
+        .tooltip {
+            position: relative;
+            display: inline-block;
+            cursor: help;
+        }
+
+        .tooltip-icon {
+            display: inline-block;
+            width: 16px;
+            height: 16px;
+            background: #4299e1;
+            color: white;
+            border-radius: 50%;
+            text-align: center;
+            line-height: 16px;
+            font-size: 12px;
+            margin-left: 4px;
+        }
+
+        .tooltip-content {
+            visibility: hidden;
+            width: 250px;
+            background-color: #2d3748;
+            color: white;
+            text-align: left;
+            border-radius: 6px;
+            padding: 8px 12px;
+            position: absolute;
+            z-index: 1;
+            bottom: 125%;
+            left: 50%;
+            margin-left: -125px;
+            opacity: 0;
+            transition: opacity 0.3s;
+            font-size: 12px;
+        }
+
+        .tooltip:hover .tooltip-content {
+            visibility: visible;
+            opacity: 1;
+        }
+
+        @media (max-width: 768px) {
+            .container {
+                grid-template-columns: 1fr;
+            }
+            
+            .report-section {
+                position: relative;
+                top: 0;
+            }
+        }
+
+        .stage-suggestion {
+            background: #ebf8ff;
+            border: 1px solid #4299e1;
+            border-radius: 6px;
+            padding: 12px;
+            margin-top: 8px;
+            font-size: 14px;
+        }
+
+        .marker-group {
+            display: grid;
+            grid-template-columns: 100px 1fr 80px;
+            gap: 8px;
+            align-items: center;
+            margin-bottom: 8px;
+        }
+
+        .tumor-type-row {
+            display: grid;
+            grid-template-columns: 2fr 100px;
+            gap: 8px;
+            align-items: center;
+            margin-bottom: 8px;
+        }
+
+        .percent-input {
+            max-width: 100px;
+        }
+
+        .required {
+            color: #e53e3e;
+        }
+
+        .date-input-group {
+            display: grid;
+            grid-template-columns: 120px 1fr;
+            gap: 8px;
+            align-items: center;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="input-section">
+            <h1>Testis Germ Hücreli Tümör Histopatoloji Raporu</h1>
+
+            <div class="section">
+                <h2>Hasta Bilgileri</h2>
+                <div class="form-group">
+                    <label>Hasta Adı Soyadı <span class="required">*</span></label>
+                    <input type="text" id="patientName" placeholder="Ad Soyad">
+                </div>
+                <div class="form-group">
+                    <label>Doğum Tarihi</label>
+                    <input type="date" id="birthDate">
+                </div>
+                <div class="form-group">
+                    <label>Protokol Numarası <span class="required">*</span></label>
+                    <input type="text" id="protocolNumber" placeholder="Protokol numarası">
+                </div>
+                <div class="form-group">
+                    <label>İstem Tarihi</label>
+                    <input type="date" id="requestDate">
+                </div>
+            </div>
+
+            <div class="section">
+                <h2>Klinik Bilgiler</h2>
+                <div class="option-group multi-select">
+                    <button class="option-button" data-value="previousTesticular">Önceki testiküler kanser öyküsü</button>
+                    <button class="option-button" data-value="previousTherapy">Önceki tedavi</button>
+                    <button class="option-button" data-value="otherClinical">Diğer klinik bilgi</button>
+                </div>
+                <div id="clinicalDetails" style="display: none;">
+                    <textarea id="clinicalDetailsText" rows="3" placeholder="Detayları giriniz..."></textarea>
+                </div>
+            </div>
+
+            <div class="section">
+                <h2>Serum Tümör Belirteçleri</h2>
+                <div class="option-group">
+                    <button class="option-button" data-value="markersNormal">Normal sınırlarda</button>
+                    <button class="option-button" data-value="markersProvided">Belirteç değerleri mevcut</button>
+                    <button class="option-button" data-value="markersNotProvided">Bilgi yok</button>
+                </div>
+                <div id="markerDetails" style="display: none;">
+                    <h3>Belirteç Değerleri</h3>
+                    <div class="date-input-group">
+                        <label>Tarih</label>
+                        <input type="date" id="markerDate">
+                    </div>
+                    <div class="marker-group">
+                        <label>AFP</label>
+                        <input type="number" id="afpValue" placeholder="Değer" step="0.1">
+                        <span class="unit">µg/L</span>
+                    </div>
+                    <div class="marker-group">
+                        <label>β-HCG</label>
+                        <input type="number" id="hcgValue" placeholder="Değer" step="0.1">
+                        <span class="unit">IU/L</span>
+                    </div>
+                    <div class="marker-group">
+                        <label>LDH</label>
+                        <input type="number" id="ldhValue" placeholder="Değer" step="0.1">
+                        <span class="unit">U/L</span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="section">
+                <h2>Operatif Prosedür</h2>
+                <div class="form-group">
+                    <label>İşlem Tipi</label>
+                    <div class="option-group">
+                        <button class="option-button" data-value="partialOrchiectomy">Parsiyel orşiektomi</button>
+                        <button class="option-button" data-value="radicalOrchiectomy">Radikal orşiektomi</button>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label>Taraf</label>
+                    <div class="option-group">
+                        <button class="option-button" data-value="left">Sol</button>
+                        <button class="option-button" data-value="right">Sağ</button>
+                    </div>
+                </div>
+            </div>
+
+            <div class="section">
+                <h2>Tümör Özellikleri</h2>
+                <div class="form-group">
+                    <label>Tümör Fokalitesi</label>
+                    <div class="option-group">
+                        <button class="option-button" data-value="unifocal">Unifokal</button>
+                        <button class="option-button" data-value="multifocal">Multifokal</button>
+                    </div>
+                    <div id="tumorCount" style="display: none;">
+                        <label>Tümör Sayısı</label>
+                        <input type="number" id="tumorNumber" min="2" placeholder="Tümör sayısı">
+                    </div>
+                </div>
+                
+                <div class="form-group">
+                    <label>En Büyük Tümör Boyutları</label>
+                    <div class="input-group">
+                        <input type="number" id="tumorSize1" placeholder="Boyut 1" step="0.1">
+                        <span class="unit">×</span>
+                        <input type="number" id="tumorSize2" placeholder="Boyut 2" step="0.1">
+                        <span class="unit">×</span>
+                        <input type="number" id="tumorSize3" placeholder="Boyut 3" step="0.1">
+                        <span class="unit">mm</span>
+                    </div>
+                </div>
+
+                <div id="additionalTumors" style="display: none;">
+                    <label>Ek Tümör Nodülleri Boyutları</label>
+                    <div class="subsection">
+                        <div class="input-group">
+                            <input type="number" id="addSize1_1" placeholder="Boyut 1" step="0.1">
+                            <span class="unit">×</span>
+                            <input type="number" id="addSize1_2" placeholder="Boyut 2" step="0.1">
+                            <span class="unit">×</span>
+                            <input type="number" id="addSize1_3" placeholder="Boyut 3" step="0.1">
+                            <span class="unit">mm</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="section">
+                <h2>Makroskopik İnvazyon Derinliği</h2>
+                <div class="option-group multi-select">
+                    <button class="option-button" data-value="confinedTestis">Testise sınırlı</button>
+                    <button class="option-button" data-value="invadeEpididymis">Epididim invazyonu</button>
+                    <button class="option-button" data-value="invadeTunicaVag">Tunika vaginalis invazyonu</button>
+                    <button class="option-button" data-value="invadeHilar">Hiler yapılar invazyonu</button>
+                    <button class="option-button" data-value="invadeCord">Spermatik kord invazyonu</button>
+                    <button class="option-button" data-value="invadeScrotum">Skrotum invazyonu</button>
+                </div>
+            </div>
+
+            <div class="section">
+                <h2>Histolojik Tümör Tipi</h2>
+                <div id="tumorTypes">
+                    <div class="tumor-type-row">
+                        <input type="text" placeholder="Germ hücreli tümör tipi" class="tumor-type-input">
+                        <input type="number" placeholder="%" min="0" max="100" class="percent-input">
+                    </div>
+                </div>
+                <button class="option-button" onclick="addTumorType()">+ Tümör Tipi Ekle</button>
+                
+                <h3>Sık Görülen Tipler</h3>
+                <div class="option-group multi-select">
+                    <button class="option-button" data-type="Seminom">Seminom</button>
+                    <button class="option-button" data-type="Embriyonal karsinom">Embriyonal karsinom</button>
+                    <button class="option-button" data-type="Yolk sac tümör">Yolk sac tümör</button>
+                    <button class="option-button" data-type="Koryokarsinom">Koryokarsinom</button>
+                    <button class="option-button" data-type="Teratom, matür">Teratom, matür</button>
+                    <button class="option-button" data-type="Teratom, immatür">Teratom, immatür</button>
+                    <button class="option-button" data-type="Teratom, malign transformasyon">Teratom, malign transformasyon</button>
+                </div>
+            </div>
+
+            <div class="section">
+                <h2>Mikroskopik İnvazyon Durumu</h2>
+                
+                <div class="subsection">
+                    <h3>Rete Testis (Stromal/İnterstisyel Tip)</h3>
+                    <div class="option-group">
+                        <button class="option-button" data-value="reteNotSubmitted">Değerlendirilemedi</button>
+                        <button class="option-button" data-value="reteNegative">Negatif</button>
+                        <button class="option-button" data-value="retePositive">Pozitif</button>
+                    </div>
+                </div>
+
+                <div class="subsection">
+                    <h3>Epididim</h3>
+                    <div class="option-group">
+                        <button class="option-button" data-value="epididymisNotSubmitted">Değerlendirilemedi</button>
+                        <button class="option-button" data-value="epididymisNegative">Negatif</button>
+                        <button class="option-button" data-value="epididymisPositive">Pozitif</button>
+                    </div>
+                </div>
+
+                <div class="subsection">
+                    <h3>Hiler Yumuşak Doku</h3>
+                    <div class="option-group">
+                        <button class="option-button" data-value="hilarNotSubmitted">Değerlendirilemedi</button>
+                        <button class="option-button" data-value="hilarNegative">Negatif</button>
+                        <button class="option-button" data-value="hilarPositive">Pozitif</button>
+                    </div>
+                </div>
+
+                <div class="subsection">
+                    <h3>Tunika Albuginea</h3>
+                    <div class="option-group">
+                        <button class="option-button" data-value="albugineaNotSubmitted">Değerlendirilemedi</button>
+                        <button class="option-button" data-value="albugineaNegative">Negatif</button>
+                        <button class="option-button" data-value="albugineaPositive">Pozitif</button>
+                    </div>
+                </div>
+
+                <div class="subsection">
+                    <h3>Tunika Vaginalis</h3>
+                    <div class="option-group">
+                        <button class="option-button" data-value="vaginalisNotSubmitted">Değerlendirilemedi</button>
+                        <button class="option-button" data-value="vaginalisNegative">Negatif</button>
+                        <button class="option-button" data-value="vaginalisPositive">Pozitif</button>
+                    </div>
+                </div>
+
+                <div class="subsection">
+                    <h3>Spermatik Kord</h3>
+                    <div class="option-group">
+                        <button class="option-button" data-value="cordNotSubmitted">Değerlendirilemedi</button>
+                        <button class="option-button" data-value="cordNegative">Negatif</button>
+                        <button class="option-button" data-value="cordPositive">Pozitif</button>
+                    </div>
+                </div>
+
+                <div class="subsection">
+                    <h3>Skrotal Duvar</h3>
+                    <div class="option-group">
+                        <button class="option-button" data-value="scrotumNotSubmitted">Değerlendirilemedi</button>
+                        <button class="option-button" data-value="scrotumNegative">Negatif</button>
+                        <button class="option-button" data-value="scrotumPositive">Pozitif</button>
+                    </div>
+                </div>
+            </div>
+
+            <div class="section">
+                <h2>Lenfovasküler İnvazyon</h2>
+                <div class="option-group">
+                    <button class="option-button" data-value="lviPresent">Mevcut</button>
+                    <button class="option-button" data-value="lviAbsent">Saptanmadı</button>
+                    <button class="option-button" data-value="lviIndeterminate">Belirsiz</button>
+                </div>
+            </div>
+
+            <div class="section">
+                <h2>İn Situ ve İntratübüler Lezyonlar</h2>
+                
+                <div class="subsection">
+                    <h3>Germ Hücreli Neoplazi in Situ (GCNIS)</h3>
+                    <div class="option-group">
+                        <button class="option-button" data-value="gcnisPresent">Mevcut</button>
+                        <button class="option-button" data-value="gcnisAbsent">Saptanmadı</button>
+                        <button class="option-button" data-value="gcnisCannot">Değerlendirilemedi</button>
+                    </div>
+                </div>
+
+                <div class="subsection">
+                    <h3>Diğer İntratübüler/İn Situ Lezyonlar</h3>
+                    <div class="option-group">
+                        <button class="option-button" data-value="otherPresent">Mevcut</button>
+                        <button class="option-button" data-value="otherAbsent">Saptanmadı</button>
+                    </div>
+                    <div id="otherLesionDetails" style="display: none;">
+                        <input type="text" id="otherLesionType" placeholder="Lezyon tipini belirtiniz">
+                    </div>
+                </div>
+            </div>
+
+            <div class="section">
+                <h2>Cerrahi Sınır Durumu</h2>
+                
+                <div id="partialMargin" style="display: none;">
+                    <h3>Parsiyel Orşiektomi</h3>
+                    <div class="option-group">
+                        <button class="option-button" data-value="partialNegative">Negatif</button>
+                        <button class="option-button" data-value="partialPositive">Pozitif</button>
+                    </div>
+                    <div id="partialDistance" style="display: none;">
+                        <label>En yakın sınıra mesafe (mm)</label>
+                        <input type="number" id="partialDistanceValue" placeholder="mm" step="0.1">
+                    </div>
+                </div>
+
+                <div id="radicalMargin" style="display: none;">
+                    <h3>Radikal Orşiektomi</h3>
+                    <div class="subsection">
+                        <label>Spermatik Kord Sınırı</label>
+                        <div class="option-group">
+                            <button class="option-button" data-value="cordMarginNegative">Negatif</button>
+                            <button class="option-button" data-value="cordMarginPositive">Pozitif</button>
+                        </div>
+                    </div>
+                    <div class="subsection">
+                        <label>Diğer Sınırlar</label>
+                        <div class="option-group">
+                            <button class="option-button" data-value="otherMarginNegative">Negatif</button>
+                            <button class="option-button" data-value="otherMarginPositive">Pozitif</button>
+                        </div>
+                        <div id="otherMarginDetails" style="display: none;">
+                            <input type="text" id="otherMarginType" placeholder="Sınır tipini belirtiniz">
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="section">
+                <h2>Eşlik Eden Patoloji</h2>
+                <div class="option-group">
+                    <button class="option-button" data-value="pathologyAbsent">Yok</button>
+                    <button class="option-button" data-value="pathologyPresent">Mevcut</button>
+                </div>
+                <div id="pathologyDetails" style="display: none;">
+                    <textarea id="pathologyDetailsText" rows="2" placeholder="Eşlik eden patolojileri belirtiniz..."></textarea>
+                </div>
+            </div>
+
+            <div class="section">
+                <h2>Ek İncelemeler</h2>
+                <div class="option-group">
+                    <button class="option-button" data-value="ancillaryNotDone">Yapılmadı</button>
+                    <button class="option-button" data-value="ancillaryDone">Yapıldı</button>
+                </div>
+                <div id="ancillaryDetails" style="display: none;">
+                    <textarea id="ancillaryResults" rows="3" placeholder="Test, yöntem ve sonuçları giriniz..."></textarea>
+                </div>
+            </div>
+
+            <div class="section">
+                <h2>Adjuvan Tedaviye Yanıt</h2>
+                <div class="option-group">
+                    <button class="option-button" data-value="noTreatment">Önceki tedavi yok</button>
+                    <button class="option-button" data-value="responseAbsent">Yanıt yok</button>
+                    <button class="option-button" data-value="responsePresent">Yanıt mevcut</button>
+                    <button class="option-button" data-value="responseCannot">Değerlendirilemedi</button>
+                </div>
+                <div id="responseDetails" style="display: none;">
+                    <textarea id="responseDetailsText" rows="2" placeholder="Açıklama..."></textarea>
+                </div>
+            </div>
+
+            <div class="section">
+                <h2>Patolojik Evreleme (AJCC/UICC TNM 8. Edisyon)</h2>
+                <div id="stageSuggestion" class="stage-suggestion" style="display: none;">
+                    <strong>Önerilen Evre:</strong> <span id="suggestedStage"></span>
+                </div>
+                
+                <div class="form-group">
+                    <label>pT</label>
+                    <div class="option-group">
+                        <button class="option-button" data-value="pTis">pTis</button>
+                        <button class="option-button" data-value="pT1">pT1</button>
+                        <button class="option-button" data-value="pT2">pT2</button>
+                        <button class="option-button" data-value="pT3">pT3</button>
+                        <button class="option-button" data-value="pT4">pT4</button>
+                    </div>
+                </div>
+                
+                <div class="form-group">
+                    <label>TNM Tanımlayıcıları</label>
+                    <div class="option-group multi-select">
+                        <button class="option-button" data-value="m">m - Multipl primer tümör</button>
+                        <button class="option-button" data-value="r">r - Nüks</button>
+                        <button class="option-button" data-value="y">y - Tedavi sonrası</button>
+                    </div>
+                </div>
+            </div>
+
+            <div class="section">
+                <h2>Ek Notlar</h2>
+                <textarea id="additionalNotes" rows="4" placeholder="Ek açıklamalar veya notlar..."></textarea>
+            </div>
+        </div>
+
+        <div class="report-section">
+            <div class="report-header">
+                <h2>Rapor Önizleme</h2>
+                <button class="copy-button" onclick="copyReport()">Raporu Kopyala</button>
+            </div>
+            <div class="report-content" id="reportContent">
+                Rapor oluşturuluyor...
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Global state
+        const state = {
+            clinical: new Set(),
+            markers: null,
+            procedure: null,
+            side: null,
+            focality: null,
+            macroInvasion: new Set(),
+            tumorTypes: [],
+            microInvasion: {},
+            lvi: null,
+            gcnis: null,
+            otherLesions: null,
+            margins: {},
+            pathology: null,
+            ancillary: null,
+            treatment: null,
+            stage: {},
+            tnmDescriptors: new Set()
+        };
+
+        // Initialize event listeners
+        document.addEventListener('DOMContentLoaded', function() {
+            // Text inputs
+            document.querySelectorAll('input[type="text"], input[type="number"], input[type="date"], textarea').forEach(input => {
+                input.addEventListener('input', updateReport);
+            });
+
+            // Option buttons
+            document.querySelectorAll('.option-button').forEach(button => {
+                button.addEventListener('click', handleOptionClick);
+            });
+
+            // Special handlers
+            setupSpecialHandlers();
+
+            // Initial report
+            updateReport();
+        });
+
+        function handleOptionClick(e) {
+            const button = e.target;
+            const parent = button.parentElement;
+            const isMultiSelect = parent.classList.contains('multi-select');
+            
+            if (isMultiSelect) {
+                button.classList.toggle('selected');
+            } else {
+                parent.querySelectorAll('.option-button').forEach(btn => {
+                    btn.classList.remove('selected');
+                });
+                button.classList.add('selected');
+            }
+            
+            updateReport();
+            suggestStage();
+        }
+
+        function setupSpecialHandlers() {
+            // Clinical details
+            document.querySelectorAll('[data-value="previousTesticular"], [data-value="previousTherapy"], [data-value="otherClinical"]').forEach(btn => {
+                btn.addEventListener('click', () => {
+                    const hasSelection = document.querySelector('[data-value="previousTesticular"].selected, [data-value="previousTherapy"].selected, [data-value="otherClinical"].selected');
+                    document.getElementById('clinicalDetails').style.display = hasSelection ? 'block' : 'none';
+                });
+            });
+
+            // Tumor markers
+            document.querySelector('[data-value="markersProvided"]')?.addEventListener('click', function() {
+                document.getElementById('markerDetails').style.display = 
+                    this.classList.contains('selected') ? 'block' : 'none';
+            });
+
+            // Multifocal tumor
+            document.querySelector('[data-value="multifocal"]')?.addEventListener('click', function() {
+                document.getElementById('tumorCount').style.display = 
+                    this.classList.contains('selected') ? 'block' : 'none';
+                document.getElementById('additionalTumors').style.display = 
+                    this.classList.contains('selected') ? 'block' : 'none';
+            });
+
+            // Procedure type handlers
+            document.querySelector('[data-value="partialOrchiectomy"]')?.addEventListener('click', function() {
+                document.getElementById('partialMargin').style.display = 
+                    this.classList.contains('selected') ? 'block' : 'none';
+                document.getElementById('radicalMargin').style.display = 'none';
+            });
+
+            document.querySelector('[data-value="radicalOrchiectomy"]')?.addEventListener('click', function() {
+                document.getElementById('radicalMargin').style.display = 
+                    this.classList.contains('selected') ? 'block' : 'none';
+                document.getElementById('partialMargin').style.display = 'none';
+            });
+
+            // Partial margin distance
+            document.querySelector('[data-value="partialNegative"]')?.addEventListener('click', function() {
+                document.getElementById('partialDistance').style.display = 
+                    this.classList.contains('selected') ? 'block' : 'none';
+            });
+
+            // Other lesions
+            document.querySelector('[data-value="otherPresent"]')?.addEventListener('click', function() {
+                document.getElementById('otherLesionDetails').style.display = 
+                    this.classList.contains('selected') ? 'block' : 'none';
+            });
+
+            // Other margins
+            document.querySelector('[data-value="otherMarginPositive"]')?.addEventListener('click', function() {
+                document.getElementById('otherMarginDetails').style.display = 
+                    this.classList.contains('selected') ? 'block' : 'none';
+            });
+
+            // Pathology
+            document.querySelector('[data-value="pathologyPresent"]')?.addEventListener('click', function() {
+                document.getElementById('pathologyDetails').style.display = 
+                    this.classList.contains('selected') ? 'block' : 'none';
+            });
+
+            // Ancillary studies
+            document.querySelector('[data-value="ancillaryDone"]')?.addEventListener('click', function() {
+                document.getElementById('ancillaryDetails').style.display = 
+                    this.classList.contains('selected') ? 'block' : 'none';
+            });
+
+            // Treatment response
+            document.querySelector('[data-value="responseCannot"]')?.addEventListener('click', function() {
+                document.getElementById('responseDetails').style.display = 
+                    this.classList.contains('selected') ? 'block' : 'none';
+            });
+
+            // Quick tumor type buttons
+            document.querySelectorAll('[data-type]').forEach(btn => {
+                btn.addEventListener('click', function() {
+                    const type = this.dataset.type;
+                    const firstEmpty = document.querySelector('.tumor-type-input:placeholder-shown');
+                    if (firstEmpty) {
+                        firstEmpty.value = type;
+                        updateReport();
+                    }
+                });
+            });
+        }
+
+        function addTumorType() {
+            const container = document.getElementById('tumorTypes');
+            const row = document.createElement('div');
+            row.className = 'tumor-type-row';
+            row.innerHTML = `
+                <input type="text" placeholder="Germ hücreli tümör tipi" class="tumor-type-input">
+                <input type="number" placeholder="%" min="0" max="100" class="percent-input">
+            `;
+            container.appendChild(row);
+            
+            // Add event listeners to new inputs
+            row.querySelectorAll('input').forEach(input => {
+                input.addEventListener('input', updateReport);
+            });
+        }
+
+        function suggestStage() {
+            let suggestedT = '';
+            
+            // Check for GCNIS only
+            const gcnis = document.querySelector('[data-value="gcnisPresent"].selected');
+            const noTumor = !document.getElementById('tumorSize1').value;
+            
+            if (gcnis && noTumor) {
+                suggestedT = 'pTis';
+            } else {
+                // Check LVI
+                const lvi = document.querySelector('[data-value="lviPresent"].selected');
+                
+                // Check macro invasion
+                const epididymis = document.querySelector('[data-value="invadeEpididymis"].selected');
+                const tunicaVag = document.querySelector('[data-value="invadeTunicaVag"].selected');
+                const hilar = document.querySelector('[data-value="invadeHilar"].selected');
+                const cord = document.querySelector('[data-value="invadeCord"].selected');
+                const scrotum = document.querySelector('[data-value="invadeScrotum"].selected');
+                
+                // Check micro invasion
+                const microEpididymis = document.querySelector('[data-value="epididymisPositive"].selected');
+                const microHilar = document.querySelector('[data-value="hilarPositive"].selected');
+                const microAlbuginea = document.querySelector('[data-value="albugineaPositive"].selected');
+                const microVaginalis = document.querySelector('[data-value="vaginalisPositive"].selected');
+                const microCord = document.querySelector('[data-value="cordPositive"].selected');
+                const microScrotum = document.querySelector('[data-value="scrotumPositive"].selected');
+                
+                if (microScrotum || scrotum) {
+                    suggestedT = 'pT4';
+                } else if (microCord || cord) {
+                    suggestedT = 'pT3';
+                } else if (lvi || microEpididymis || epididymis || microHilar || hilar || 
+                          (microAlbuginea && microVaginalis) || tunicaVag) {
+                    suggestedT = 'pT2';
+                } else if (document.getElementById('tumorSize1').value) {
+                    suggestedT = 'pT1';
+                }
+            }
+            
+            // Display suggestion
+            if (suggestedT) {
+                const suggestionDiv = document.getElementById('stageSuggestion');
+                const suggestedStageSpan = document.getElementById('suggestedStage');
+                
+                suggestionDiv.style.display = 'block';
+                suggestedStageSpan.textContent = suggestedT;
+            }
+        }
+
+        function updateReport() {
+            const report = [];
+            
+            // Header
+            report.push('TESTİS GERM HÜCRELİ TÜMÖR HİSTOPATOLOJİ RAPORU');
+            report.push('═'.repeat(60));
+            report.push('');
+            
+            // Patient info
+            const name = document.getElementById('patientName').value;
+            const birthDate = document.getElementById('birthDate').value;
+            const protocol = document.getElementById('protocolNumber').value;
+            const requestDate = document.getElementById('requestDate').value;
+            
+            if (name || protocol) {
+                report.push('HASTA BİLGİLERİ');
+                if (name) report.push(`Hasta Adı: ${name}`);
+                if (birthDate) report.push(`Doğum Tarihi: ${formatDate(birthDate)}`);
+                if (protocol) report.push(`Protokol No: ${protocol}`);
+                if (requestDate) report.push(`İstem Tarihi: ${formatDate(requestDate)}`);
+                report.push('');
+            }
+
+            // Clinical info
+            const clinicalButtons = document.querySelectorAll('[data-value="previousTesticular"].selected, [data-value="previousTherapy"].selected, [data-value="otherClinical"].selected');
+            if (clinicalButtons.length > 0) {
+                report.push('KLİNİK BİLGİLER');
+                clinicalButtons.forEach(btn => {
+                    const labels = {
+                        'previousTesticular': 'Önceki testiküler kanser öyküsü',
+                        'previousTherapy': 'Önceki tedavi',
+                        'otherClinical': 'Diğer klinik bilgi'
+                    };
+                    report.push(`• ${labels[btn.dataset.value]}`);
+                });
+                const clinicalDetails = document.getElementById('clinicalDetailsText').value;
+                if (clinicalDetails) {
+                    report.push(`  Detay: ${clinicalDetails}`);
+                }
+                report.push('');
+            }
+
+            // Tumor markers
+            const markers = document.querySelector('[data-value^="markers"].selected');
+            if (markers) {
+                report.push('SERUM TÜMÖR BELİRTEÇLERİ');
+                if (markers.dataset.value === 'markersNormal') {
+                    report.push('Normal sınırlarda');
+                } else if (markers.dataset.value === 'markersProvided') {
+                    const date = document.getElementById('markerDate').value;
+                    if (date) report.push(`Tarih: ${formatDate(date)}`);
+                    
+                    const afp = document.getElementById('afpValue').value;
+                    const hcg = document.getElementById('hcgValue').value;
+                    const ldh = document.getElementById('ldhValue').value;
+                    
+                    if (afp) report.push(`AFP: ${afp} µg/L`);
+                    if (hcg) report.push(`β-HCG: ${hcg} IU/L`);
+                    if (ldh) report.push(`LDH: ${ldh} U/L`);
+                } else {
+                    report.push('Bilgi mevcut değil');
+                }
+                report.push('');
+            }
+
+            // Operative procedure
+            const procedure = document.querySelector('[data-value$="Orchiectomy"].selected');
+            const side = document.querySelector('[data-value="left"].selected, [data-value="right"].selected');
+            
+            if (procedure || side) {
+                report.push('OPERATİF PROSEDÜR');
+                if (procedure) {
+                    const procLabels = {
+                        'partialOrchiectomy': 'Parsiyel orşiektomi',
+                        'radicalOrchiectomy': 'Radikal orşiektomi'
+                    };
+                    report.push(`İşlem: ${procLabels[procedure.dataset.value]}`);
+                }
+                if (side) {
+                    report.push(`Taraf: ${side.dataset.value === 'left' ? 'Sol' : 'Sağ'}`);
+                }
+                report.push('');
+            }
+
+            // Tumor characteristics
+            const focality = document.querySelector('[data-value="unifocal"].selected, [data-value="multifocal"].selected');
+            const size1 = document.getElementById('tumorSize1').value;
+            const size2 = document.getElementById('tumorSize2').value;
+            const size3 = document.getElementById('tumorSize3').value;
+            
+            if (focality || size1) {
+                report.push('TÜMÖR ÖZELLİKLERİ');
+                if (focality) {
+                    report.push(`Fokalite: ${focality.dataset.value === 'unifocal' ? 'Unifokal' : 'Multifokal'}`);
+                    if (focality.dataset.value === 'multifocal') {
+                        const count = document.getElementById('tumorNumber').value;
+                        if (count) report.push(`Tümör sayısı: ${count}`);
+                    }
+                }
+                if (size1) {
+                    let sizeText = `En büyük tümör boyutu: ${size1}`;
+                    if (size2) sizeText += ` × ${size2}`;
+                    if (size3) sizeText += ` × ${size3}`;
+                    sizeText += ' mm';
+                    report.push(sizeText);
+                }
+                
+                // Additional tumors
+                const addSize1 = document.getElementById('addSize1_1')?.value;
+                if (addSize1) {
+                    const addSize2 = document.getElementById('addSize1_2')?.value;
+                    const addSize3 = document.getElementById('addSize1_3')?.value;
+                    let addSizeText = `Ek tümör boyutu: ${addSize1}`;
+                    if (addSize2) addSizeText += ` × ${addSize2}`;
+                    if (addSize3) addSizeText += ` × ${addSize3}`;
+                    addSizeText += ' mm';
+                    report.push(addSizeText);
+                }
+                report.push('');
+            }
+
+            // Macroscopic invasion
+            const macroInvasion = document.querySelectorAll('[data-value^="confined"], [data-value^="invade"]');
+            const selectedMacro = Array.from(macroInvasion).filter(btn => btn.classList.contains('selected'));
+            
+            if (selectedMacro.length > 0) {
+                report.push('MAKROSKOPİK İNVAZYON');
+                selectedMacro.forEach(btn => {
+                    const labels = {
+                        'confinedTestis': 'Testise sınırlı',
+                        'invadeEpididymis': 'Epididim invazyonu',
+                        'invadeTunicaVag': 'Tunika vaginalis invazyonu',
+                        'invadeHilar': 'Hiler yapılar invazyonu',
+                        'invadeCord': 'Spermatik kord invazyonu',
+                        'invadeScrotum': 'Skrotum invazyonu'
+                    };
+                    report.push(`• ${labels[btn.dataset.value]}`);
+                });
+                report.push('');
+            }
+
+            // Histologic type
+            const tumorTypeInputs = document.querySelectorAll('.tumor-type-input');
+            const hasTypes = Array.from(tumorTypeInputs).some(input => input.value);
+            
+            if (hasTypes) {
+                report.push('HİSTOLOJİK TİP');
+                tumorTypeInputs.forEach((input, index) => {
+                    if (input.value) {
+                        const percent = input.nextElementSibling.value;
+                        if (percent) {
+                            report.push(`${input.value}: %${percent}`);
+                        } else {
+                            report.push(input.value);
+                        }
+                    }
+                });
+                report.push('');
+            }
+
+            // Microscopic invasion
+            const microSections = [
+                { prefix: 'rete', title: 'Rete testis (stromal/interstisyel tip)' },
+                { prefix: 'epididymis', title: 'Epididim' },
+                { prefix: 'hilar', title: 'Hiler yumuşak doku' },
+                { prefix: 'albuginea', title: 'Tunika albuginea' },
+                { prefix: 'vaginalis', title: 'Tunika vaginalis' },
+                { prefix: 'cord', title: 'Spermatik kord' },
+                { prefix: 'scrotum', title: 'Skrotal duvar' }
+            ];
+
+            let hasMicro = false;
+            microSections.forEach(section => {
+                const selected = document.querySelector(`[data-value^="${section.prefix}"].selected`);
+                if (selected && !selected.dataset.value.includes('NotSubmitted')) {
+                    hasMicro = true;
+                }
+            });
+
+            if (hasMicro) {
+                report.push('MİKROSKOPİK İNVAZYON DURUMU');
+                microSections.forEach(section => {
+                    const selected = document.querySelector(`[data-value^="${section.prefix}"].selected`);
+                    if (selected) {
+                        if (selected.dataset.value.includes('Positive')) {
+                            report.push(`${section.title}: Pozitif`);
+                        } else if (selected.dataset.value.includes('Negative')) {
+                            report.push(`${section.title}: Negatif`);
+                        }
+                    }
+                });
+                report.push('');
+            }
+
+            // LVI
+            const lvi = document.querySelector('[data-value^="lvi"].selected');
+            if (lvi) {
+                report.push('LENFOVASKÜLER İNVAZYON');
+                const lviLabels = {
+                    'lviPresent': 'Mevcut',
+                    'lviAbsent': 'Saptanmadı',
+                    'lviIndeterminate': 'Belirsiz'
+                };
+                report.push(lviLabels[lvi.dataset.value]);
+                report.push('');
+            }
+
+            // In situ lesions
+            const gcnis = document.querySelector('[data-value^="gcnis"].selected');
+            const otherLesions = document.querySelector('[data-value^="other"].selected');
+            
+            if (gcnis || otherLesions) {
+                report.push('İN SİTU VE İNTRATÜBÜLER LEZYONLAR');
+                if (gcnis) {
+                    const gcnisLabels = {
+                        'gcnisPresent': 'Germ hücreli neoplazi in situ (GCNIS): Mevcut',
+                        'gcnisAbsent': 'Germ hücreli neoplazi in situ (GCNIS): Saptanmadı',
+                        'gcnisCannot': 'Germ hücreli neoplazi in situ (GCNIS): Değerlendirilemedi'
+                    };
+                    report.push(gcnisLabels[gcnis.dataset.value]);
+                }
+                if (otherLesions && otherLesions.dataset.value === 'otherPresent') {
+                    const lesionType = document.getElementById('otherLesionType').value;
+                    report.push(`Diğer intratübüler/in situ lezyonlar: ${lesionType || 'Mevcut'}`);
+                } else if (otherLesions && otherLesions.dataset.value === 'otherAbsent') {
+                    report.push('Diğer intratübüler/in situ lezyonlar: Saptanmadı');
+                }
+                report.push('');
+            }
+
+            // Margins
+            if (procedure) {
+                report.push('CERRAHİ SINIR DURUMU');
+                
+                if (procedure.dataset.value === 'partialOrchiectomy') {
+                    const partialMargin = document.querySelector('[data-value^="partial"].selected');
+                    if (partialMargin) {
+                        if (partialMargin.dataset.value === 'partialNegative') {
+                            report.push('Parsiyel orşiektomi sınırı: Negatif');
+                            const distance = document.getElementById('partialDistanceValue').value;
+                            if (distance) {
+                                report.push(`En yakın sınıra mesafe: ${distance} mm`);
+                            }
+                        } else {
+                            report.push('Parsiyel orşiektomi sınırı: Pozitif');
+                        }
+                    }
+                } else if (procedure.dataset.value === 'radicalOrchiectomy') {
+                    const cordMargin = document.querySelector('[data-value^="cordMargin"].selected');
+                    const otherMargin = document.querySelector('[data-value^="otherMargin"].selected');
+                    
+                    if (cordMargin) {
+                        report.push(`Spermatik kord sınırı: ${cordMargin.dataset.value === 'cordMarginNegative' ? 'Negatif' : 'Pozitif'}`);
+                    }
+                    if (otherMargin) {
+                        if (otherMargin.dataset.value === 'otherMarginPositive') {
+                            const otherType = document.getElementById('otherMarginType').value;
+                            report.push(`Diğer sınır: Pozitif${otherType ? ` (${otherType})` : ''}`);
+                        } else {
+                            report.push('Diğer sınırlar: Negatif');
+                        }
+                    }
+                }
+                report.push('');
+            }
+
+            // Coexistent pathology
+            const pathology = document.querySelector('[data-value^="pathology"].selected');
+            if (pathology && pathology.dataset.value === 'pathologyPresent') {
+                report.push('EŞLİK EDEN PATOLOJİ');
+                const details = document.getElementById('pathologyDetailsText').value;
+                report.push(details || 'Mevcut');
+                report.push('');
+            }
+
+            // Ancillary studies
+            const ancillary = document.querySelector('[data-value^="ancillary"].selected');
+            if (ancillary && ancillary.dataset.value === 'ancillaryDone') {
+                report.push('EK İNCELEMELER');
+                const results = document.getElementById('ancillaryResults').value;
+                report.push(results || 'Yapıldı');
+                report.push('');
+            }
+
+            // Treatment response
+            const treatment = document.querySelector('[data-value="noTreatment"].selected, [data-value^="response"].selected');
+            if (treatment) {
+                report.push('ADJUVAN TEDAVİYE YANIT');
+                const treatmentLabels = {
+                    'noTreatment': 'Önceki tedavi yok',
+                    'responseAbsent': 'Yanıt yok',
+                    'responsePresent': 'Yanıt mevcut',
+                    'responseCannot': 'Değerlendirilemedi'
+                };
+                report.push(treatmentLabels[treatment.dataset.value]);
+                if (treatment.dataset.value === 'responseCannot') {
+                    const reason = document.getElementById('responseDetailsText').value;
+                    if (reason) report.push(`Açıklama: ${reason}`);
+                }
+                report.push('');
+            }
+
+            // Staging
+            const pT = document.querySelector('[data-value^="pT"].selected');
+            const descriptors = document.querySelectorAll('[data-value="m"].selected, [data-value="r"].selected, [data-value="y"].selected');
+            
+            if (pT) {
+                report.push('PATOLOJİK EVRE (AJCC/UICC TNM 8. Edisyon)');
+                let stageText = '';
+                if (descriptors.length > 0) {
+                    descriptors.forEach(d => stageText += d.dataset.value);
+                    stageText += '-';
+                }
+                stageText += pT.dataset.value;
+                report.push(stageText);
+                
+                // Stage definitions
+                const stageDefinitions = {
+                    'pTis': 'Germ hücreli neoplazi in situ',
+                    'pT1': 'Tümör testise sınırlı (rete testis dahil), LVI yok, epididim invazyonu yok',
+                    'pT2': 'Tümör testise sınırlı + LVI var VEYA hiler yumuşak doku/epididim invazyonu var VEYA tunika albuginea aşılmış + visseral tunika vaginalis tutulumu',
+                    'pT3': 'Spermatik kord invazyonu',
+                    'pT4': 'Skrotum invazyonu'
+                };
+                if (stageDefinitions[pT.dataset.value]) {
+                    report.push(`(${stageDefinitions[pT.dataset.value]})`);
+                }
+                report.push('');
+            }
+
+            // Additional notes
+            const notes = document.getElementById('additionalNotes').value;
+            if (notes) {
+                report.push('EK NOTLAR');
+                report.push(notes);
+                report.push('');
+            }
+
+            // Footer
+            report.push('');
+            report.push('─'.repeat(60));
+            report.push(`Rapor tarihi: ${new Date().toLocaleDateString('tr-TR')}`);
+
+            document.getElementById('reportContent').textContent = report.join('\n');
+        }
+
+        function formatDate(dateString) {
+            if (!dateString) return '';
+            const date = new Date(dateString);
+            return date.toLocaleDateString('tr-TR');
+        }
+
+        function copyReport() {
+            const reportText = document.getElementById('reportContent').textContent;
+            navigator.clipboard.writeText(reportText).then(() => {
+                const button = document.querySelector('.copy-button');
+                const originalText = button.textContent;
+                button.textContent = 'Kopyalandı!';
+                button.style.background = '#48bb78';
+                
+                setTimeout(() => {
+                    button.textContent = originalText;
+                    button.style.background = '#4299e1';
+                }, 2000);
+            });
+        }
+    </script>
+</body>
+</html>
