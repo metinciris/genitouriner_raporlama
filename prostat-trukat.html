@@ -1,0 +1,927 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Prostat İğne Biyopsi Histopatoloji Rapor Sistemi</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #f0f4f8;
+            color: #1a202c;
+            line-height: 1.6;
+        }
+
+        .container {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+            padding: 20px;
+            max-width: 1600px;
+            margin: 0 auto;
+        }
+
+        .input-section {
+            background: white;
+            border-radius: 12px;
+            padding: 24px;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+            overflow-y: auto;
+            max-height: calc(100vh - 40px);
+        }
+
+        .report-section {
+            background: white;
+            border-radius: 12px;
+            padding: 24px;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+            position: sticky;
+            top: 20px;
+            max-height: calc(100vh - 40px);
+            overflow-y: auto;
+        }
+
+        h1 {
+            color: #2c5282;
+            font-size: 24px;
+            margin-bottom: 24px;
+            font-weight: 600;
+        }
+
+        h2 {
+            color: #2d3748;
+            font-size: 18px;
+            margin-top: 24px;
+            margin-bottom: 16px;
+            font-weight: 600;
+        }
+
+        h3 {
+            color: #4a5568;
+            font-size: 16px;
+            margin-top: 16px;
+            margin-bottom: 12px;
+            font-weight: 500;
+        }
+
+        .section {
+            background: #f7fafc;
+            border-radius: 8px;
+            padding: 16px;
+            margin-bottom: 16px;
+            border: 1px solid #e2e8f0;
+        }
+
+        .template-selection {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 12px;
+            margin-bottom: 20px;
+        }
+
+        .template-option {
+            padding: 16px;
+            border: 2px solid #cbd5e0;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.2s;
+            font-size: 14px;
+        }
+
+        .template-option:hover {
+            border-color: #4299e1;
+            background: #ebf8ff;
+        }
+
+        .template-option.selected {
+            border-color: #4299e1;
+            background: #ebf8ff;
+            box-shadow: 0 0 0 3px rgba(66, 153, 225, 0.1);
+        }
+
+        .specimen-section {
+            border: 2px solid #cbd5e0;
+            border-radius: 8px;
+            padding: 16px;
+            margin-bottom: 12px;
+            position: relative;
+        }
+
+        /* Her specimen için sırayla renkler */
+        .specimen-section:nth-child(12n+1) { background-color: #fef3c7; border-color: #f59e0b; }
+        .specimen-section:nth-child(12n+2) { background-color: #fed7aa; border-color: #f97316; }
+        .specimen-section:nth-child(12n+3) { background-color: #fecaca; border-color: #ef4444; }
+        .specimen-section:nth-child(12n+4) { background-color: #fde68a; border-color: #eab308; }
+        .specimen-section:nth-child(12n+5) { background-color: #ddd6fe; border-color: #8b5cf6; }
+        .specimen-section:nth-child(12n+6) { background-color: #c7d2fe; border-color: #6366f1; }
+        .specimen-section:nth-child(12n+7) { background-color: #bfdbfe; border-color: #3b82f6; }
+        .specimen-section:nth-child(12n+8) { background-color: #a7f3d0; border-color: #10b981; }
+        .specimen-section:nth-child(12n+9) { background-color: #6ee7b7; border-color: #059669; }
+        .specimen-section:nth-child(12n+10) { background-color: #5eead4; border-color: #14b8a6; }
+        .specimen-section:nth-child(12n+11) { background-color: #e0e7ff; border-color: #818cf8; }
+        .specimen-section:nth-child(12n+12) { background-color: #fce7f3; border-color: #ec4899; }
+
+        .specimen-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 12px;
+        }
+
+        .specimen-title {
+            color: #1a202c;
+            font-size: 16px;
+            font-weight: 600;
+        }
+
+        .form-group {
+            margin-bottom: 16px;
+        }
+
+        label {
+            display: block;
+            font-weight: 500;
+            color: #4a5568;
+            margin-bottom: 8px;
+            font-size: 14px;
+        }
+
+        input[type="text"],
+        input[type="number"],
+        input[type="date"],
+        textarea {
+            width: 100%;
+            padding: 10px 12px;
+            border: 1px solid #cbd5e0;
+            border-radius: 6px;
+            font-size: 14px;
+            transition: all 0.2s;
+            font-family: 'Inter', sans-serif;
+        }
+
+        input[type="text"]:focus,
+        input[type="number"]:focus,
+        input[type="date"]:focus,
+        textarea:focus {
+            outline: none;
+            border-color: #4299e1;
+            box-shadow: 0 0 0 3px rgba(66, 153, 225, 0.1);
+        }
+
+        .option-group {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+            margin-bottom: 12px;
+        }
+
+        .option-button {
+            padding: 8px 16px;
+            border: 2px solid #cbd5e0;
+            border-radius: 6px;
+            background: white;
+            cursor: pointer;
+            transition: all 0.2s;
+            font-size: 14px;
+            font-weight: 500;
+        }
+
+        .option-button:hover {
+            border-color: #4299e1;
+            background: #ebf8ff;
+        }
+
+        .option-button.selected {
+            background: #4299e1;
+            color: white;
+            border-color: #4299e1;
+        }
+
+        .report-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+
+        .copy-button {
+            padding: 8px 16px;
+            background: #4299e1;
+            color: white;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+            font-weight: 500;
+            transition: all 0.2s;
+        }
+
+        .copy-button:hover {
+            background: #3182ce;
+        }
+
+        .report-content {
+            font-size: 14px;
+            line-height: 1.8;
+            white-space: pre-wrap;
+            color: #2d3748;
+            font-family: 'Courier New', monospace;
+        }
+
+        .gleason-select {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 8px;
+        }
+
+        .gleason-button {
+            padding: 8px;
+            border: 2px solid #cbd5e0;
+            border-radius: 6px;
+            background: white;
+            cursor: pointer;
+            font-weight: 600;
+            transition: all 0.2s;
+        }
+
+        .gleason-button:hover {
+            border-color: #4299e1;
+            background: #ebf8ff;
+        }
+
+        .gleason-button.selected {
+            background: #4299e1;
+            color: white;
+            border-color: #4299e1;
+        }
+
+        .percentage-select {
+            display: grid;
+            grid-template-columns: repeat(5, 1fr);
+            gap: 8px;
+        }
+
+        .required {
+            color: #e53e3e;
+        }
+
+        .subsection {
+            margin-left: 16px;
+            padding-left: 16px;
+            border-left: 3px solid #e2e8f0;
+        }
+
+        .add-specimen-button {
+            width: 100%;
+            padding: 12px;
+            background: #48bb78;
+            color: white;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            font-weight: 600;
+            font-size: 16px;
+            transition: all 0.2s;
+            margin-top: 16px;
+        }
+
+        .add-specimen-button:hover {
+            background: #38a169;
+        }
+
+        .pattern4-summary {
+            background: #ebf8ff;
+            border: 1px solid #4299e1;
+            border-radius: 8px;
+            padding: 16px;
+            margin-top: 20px;
+        }
+
+        @media (max-width: 768px) {
+            .container {
+                grid-template-columns: 1fr;
+            }
+            
+            .report-section {
+                position: relative;
+                top: 0;
+            }
+
+            .template-selection {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="input-section">
+            <h1>Prostat İğne Biyopsi Histopatoloji Rapor Sistemi</h1>
+
+            <div class="section">
+                <h2>Hasta Bilgileri</h2>
+                <div class="form-group">
+                    <label>Hasta Adı Soyadı <span class="required">*</span></label>
+                    <input type="text" id="patientName" placeholder="Ad Soyad">
+                </div>
+                <div class="form-group">
+                    <label>Doğum Tarihi</label>
+                    <input type="date" id="birthDate">
+                </div>
+                <div class="form-group">
+                    <label>Protokol Numarası <span class="required">*</span></label>
+                    <input type="text" id="protocolNumber" placeholder="Protokol numarası">
+                </div>
+                <div class="form-group">
+                    <label>İstem Tarihi</label>
+                    <input type="date" id="requestDate">
+                </div>
+            </div>
+
+            <div class="section">
+                <h2>Lokalizasyon Şablonu Seçimi</h2>
+                <div class="template-selection">
+                    <div class="template-option" data-template="1">
+                        <strong>Şablon 1</strong><br>
+                        Taban → Orta → Apeks<br>
+                        (Lateral-Medial sırası)
+                    </div>
+                    <div class="template-option" data-template="2">
+                        <strong>Şablon 2</strong><br>
+                        Apeks → Orta → Bazal<br>
+                        (Lateral-Medial sırası)
+                    </div>
+                    <div class="template-option" data-template="3">
+                        <strong>Şablon 3</strong><br>
+                        Bazal → Orta → Apeks<br>
+                        (Medial-Lateral sırası)
+                    </div>
+                    <div class="template-option" data-template="4">
+                        <strong>Şablon 4</strong><br>
+                        Lateral → Medial<br>
+                        (Taban-Orta-Apeks sırası)
+                    </div>
+                </div>
+            </div>
+
+            <div id="specimensContainer">
+                <!-- Specimens will be added here dynamically -->
+            </div>
+
+            <button class="add-specimen-button" id="addSpecimenBtn" style="display: none;">+ Ek Lokalizasyon Ekle</button>
+
+            <div id="pattern4Summary" class="pattern4-summary" style="display: none;">
+                <h3>Patern 4 Değerlendirmesi</h3>
+                <div class="form-group">
+                    <label>Toplam Patern 4 Yüzdesi</label>
+                    <div class="percentage-select">
+                        <button class="option-button" data-pattern4-total="5">%5</button>
+                        <button class="option-button" data-pattern4-total="10">%10</button>
+                        <button class="option-button" data-pattern4-total="15">%15</button>
+                        <button class="option-button" data-pattern4-total="20">%20</button>
+                        <button class="option-button" data-pattern4-total="25">%25</button>
+                        <button class="option-button" data-pattern4-total="30">%30</button>
+                        <button class="option-button" data-pattern4-total="35">%35</button>
+                        <button class="option-button" data-pattern4-total="40">%40</button>
+                        <button class="option-button" data-pattern4-total="45">%45</button>
+                        <button class="option-button" data-pattern4-total="50">%50</button>
+                        <button class="option-button" data-pattern4-total="55">%55</button>
+                        <button class="option-button" data-pattern4-total="60">%60</button>
+                        <button class="option-button" data-pattern4-total="65">%65</button>
+                        <button class="option-button" data-pattern4-total="70">%70</button>
+                        <button class="option-button" data-pattern4-total="75">%75</button>
+                        <button class="option-button" data-pattern4-total="80">%80</button>
+                        <button class="option-button" data-pattern4-total="85">%85</button>
+                        <button class="option-button" data-pattern4-total="90">%90</button>
+                        <button class="option-button" data-pattern4-total="95">%95</button>
+                        <button class="option-button" data-pattern4-total="100">%100</button>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label>Kribriform Gland</label>
+                    <div class="option-group">
+                        <button class="option-button" data-cribriform="var">Vardır</button>
+                        <button class="option-button" data-cribriform="yok">Yoktur</button>
+                    </div>
+                </div>
+            </div>
+
+            <div class="section">
+                <h2>Ek Notlar</h2>
+                <textarea id="additionalNotes" rows="4" placeholder="Ek açıklamalar, seminal vezikül invazyonu vb..."></textarea>
+            </div>
+        </div>
+
+        <div class="report-section">
+            <div class="report-header">
+                <h2>Rapor Önizleme</h2>
+                <button class="copy-button" onclick="copyReport()">Raporu Kopyala</button>
+            </div>
+            <div class="report-content" id="reportContent">
+                Lütfen bir lokalizasyon şablonu seçiniz...
+            </div>
+        </div>
+    </div>
+
+    <script>
+        let selectedTemplate = null;
+        const specimens = {};
+        let pattern4TotalPercentage = null;
+        let cribriformStatus = null;
+        
+        const templates = {
+            1: [
+                'Sağ Taban Lateral', 'Sağ Taban Medial', 'Sağ Orta Lateral', 'Sağ Orta Medial',
+                'Sağ Apeks Lateral', 'Sağ Apeks Medial', 'Sol Taban Lateral', 'Sol Taban Medial',
+                'Sol Orta Lateral', 'Sol Orta Medial', 'Sol Apeks Lateral', 'Sol Apeks Medial'
+            ],
+            2: [
+                'Sağ Apeks Lateral', 'Sağ Apeks Medial', 'Sağ Orta Lateral', 'Sağ Orta Medial',
+                'Sağ Bazal Lateral', 'Sağ Bazal Medial', 'Sol Apeks Medial', 'Sol Apeks Lateral',
+                'Sol Orta Medial', 'Sol Orta Lateral', 'Sol Bazal Medial', 'Sol Bazal Lateral'
+            ],
+            3: [
+                'Sağ Bazal Medial', 'Sağ Bazal Lateral', 'Sağ Orta Medial', 'Sağ Orta Lateral',
+                'Sağ Apeks Medial', 'Sağ Apeks Lateral', 'Sol Bazal Medial', 'Sol Bazal Lateral',
+                'Sol Orta Medial', 'Sol Orta Lateral', 'Sol Apeks Medial', 'Sol Apeks Lateral'
+            ],
+            4: [
+                'Sağ Taban Lateral', 'Sağ Orta Lateral', 'Sağ Apeks Lateral', 'Sağ Taban Medial',
+                'Sağ Orta Medial', 'Sağ Apeks Medial', 'Sol Taban Medial', 'Sol Orta Medial',
+                'Sol Apeks Medial', 'Sol Taban Lateral', 'Sol Orta Lateral', 'Sol Apeks Lateral'
+            ]
+        };
+
+        // Initialize
+        document.addEventListener('DOMContentLoaded', function() {
+            // Template selection
+            document.querySelectorAll('.template-option').forEach(option => {
+                option.addEventListener('click', function() {
+                    document.querySelectorAll('.template-option').forEach(opt => opt.classList.remove('selected'));
+                    this.classList.add('selected');
+                    selectedTemplate = this.dataset.template;
+                    loadTemplate(selectedTemplate);
+                });
+            });
+
+            // Add specimen button listener
+            document.getElementById('addSpecimenBtn').addEventListener('click', addSpecimen);
+
+            // Patient info listeners
+            document.querySelectorAll('#patientName, #birthDate, #protocolNumber, #requestDate').forEach(input => {
+                input.addEventListener('input', updateReport);
+            });
+            
+            // Additional notes listener
+            document.getElementById('additionalNotes').addEventListener('input', updateReport);
+
+            // Pattern 4 total percentage buttons
+            document.querySelectorAll('[data-pattern4-total]').forEach(btn => {
+                btn.addEventListener('click', function() {
+                    document.querySelectorAll('[data-pattern4-total]').forEach(b => b.classList.remove('selected'));
+                    this.classList.add('selected');
+                    pattern4TotalPercentage = parseInt(this.dataset.pattern4Total);
+                    updateReport();
+                });
+            });
+
+            // Cribriform buttons
+            document.querySelectorAll('[data-cribriform]').forEach(btn => {
+                btn.addEventListener('click', function() {
+                    document.querySelectorAll('[data-cribriform]').forEach(b => b.classList.remove('selected'));
+                    this.classList.add('selected');
+                    cribriformStatus = this.dataset.cribriform;
+                    updateReport();
+                });
+            });
+        });
+
+        function loadTemplate(templateNumber) {
+            const container = document.getElementById('specimensContainer');
+            container.innerHTML = '';
+            
+            const locations = templates[templateNumber];
+            locations.forEach((location, index) => {
+                const specimenNumber = index + 1;
+                createSpecimen(specimenNumber, location);
+            });
+            
+            // Show add button after loading template
+            const addBtn = document.getElementById('addSpecimenBtn');
+            if (addBtn) {
+                addBtn.style.display = 'block';
+            }
+            
+            updateReport();
+        }
+
+        function createSpecimen(number, location) {
+            const specimenId = `specimen_${number}`;
+            specimens[specimenId] = {
+                number: number,
+                location: location,
+                tumorPresent: null,
+                gleason: { primary: null, secondary: null },
+                tumorPercentage: null,
+                perineural: false,
+                idc: false,
+                cribriform: false,
+                extraprostatic: false,
+                pathology: null
+            };
+
+            const container = document.getElementById('specimensContainer');
+            const specimenDiv = document.createElement('div');
+            specimenDiv.className = 'specimen-section';
+            specimenDiv.id = specimenId;
+            specimenDiv.innerHTML = createSpecimenHTML(number, location);
+            
+            container.appendChild(specimenDiv);
+            setupSpecimenListeners(specimenId);
+        }
+
+        function createSpecimenHTML(number, location) {
+            return `
+                <div class="specimen-header">
+                    <h3 class="specimen-title">${number}- ${location}</h3>
+                </div>
+
+                <div class="form-group">
+                    <label>Tümör Varlığı</label>
+                    <div class="option-group">
+                        <button class="option-button" data-specimen="specimen_${number}" data-tumor="benign">Benign prostat dokusu</button>
+                        <button class="option-button" data-specimen="specimen_${number}" data-tumor="tumor">Prostat adenokarsinomu</button>
+                    </div>
+                </div>
+
+                <div id="specimen_${number}_tumorDetails" style="display: none;">
+                    <div class="form-group">
+                        <label>Gleason Skoru</label>
+                        <div style="display: grid; grid-template-columns: 1fr auto 1fr; gap: 8px; align-items: center;">
+                            <div>
+                                <label style="font-size: 12px; margin-bottom: 4px;">Primer</label>
+                                <div class="gleason-select">
+                                    <button class="gleason-button" data-specimen="specimen_${number}" data-pattern="primary" data-value="3">3</button>
+                                    <button class="gleason-button" data-specimen="specimen_${number}" data-pattern="primary" data-value="4">4</button>
+                                    <button class="gleason-button" data-specimen="specimen_${number}" data-pattern="primary" data-value="5">5</button>
+                                </div>
+                            </div>
+                            <span style="font-size: 20px; margin-top: 20px;">+</span>
+                            <div>
+                                <label style="font-size: 12px; margin-bottom: 4px;">Sekonder</label>
+                                <div class="gleason-select">
+                                    <button class="gleason-button" data-specimen="specimen_${number}" data-pattern="secondary" data-value="3">3</button>
+                                    <button class="gleason-button" data-specimen="specimen_${number}" data-pattern="secondary" data-value="4">4</button>
+                                    <button class="gleason-button" data-specimen="specimen_${number}" data-pattern="secondary" data-value="5">5</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label>Dokudaki Tümör Yüzdesi</label>
+                        <div class="percentage-select">
+                            <button class="option-button" data-specimen="specimen_${number}" data-percentage="5">%5</button>
+                            <button class="option-button" data-specimen="specimen_${number}" data-percentage="10">%10</button>
+                            <button class="option-button" data-specimen="specimen_${number}" data-percentage="15">%15</button>
+                            <button class="option-button" data-specimen="specimen_${number}" data-percentage="20">%20</button>
+                            <button class="option-button" data-specimen="specimen_${number}" data-percentage="25">%25</button>
+                            <button class="option-button" data-specimen="specimen_${number}" data-percentage="30">%30</button>
+                            <button class="option-button" data-specimen="specimen_${number}" data-percentage="35">%35</button>
+                            <button class="option-button" data-specimen="specimen_${number}" data-percentage="40">%40</button>
+                            <button class="option-button" data-specimen="specimen_${number}" data-percentage="45">%45</button>
+                            <button class="option-button" data-specimen="specimen_${number}" data-percentage="50">%50</button>
+                            <button class="option-button" data-specimen="specimen_${number}" data-percentage="55">%55</button>
+                            <button class="option-button" data-specimen="specimen_${number}" data-percentage="60">%60</button>
+                            <button class="option-button" data-specimen="specimen_${number}" data-percentage="65">%65</button>
+                            <button class="option-button" data-specimen="specimen_${number}" data-percentage="70">%70</button>
+                            <button class="option-button" data-specimen="specimen_${number}" data-percentage="75">%75</button>
+                            <button class="option-button" data-specimen="specimen_${number}" data-percentage="80">%80</button>
+                            <button class="option-button" data-specimen="specimen_${number}" data-percentage="85">%85</button>
+                            <button class="option-button" data-specimen="specimen_${number}" data-percentage="90">%90</button>
+                            <button class="option-button" data-specimen="specimen_${number}" data-percentage="95">%95</button>
+                            <button class="option-button" data-specimen="specimen_${number}" data-percentage="100">%100</button>
+                        </div>
+                        <input type="number" id="specimen_${number}_percentageManual" placeholder="Manuel giriş (%)" min="1" max="100" style="margin-top: 8px;">
+                    </div>
+
+                    <div class="form-group">
+                        <label>Ek Bulgular</label>
+                        <div class="option-group">
+                            <button class="option-button multi-select" data-specimen="specimen_${number}" data-feature="perineural">Perinöral invazyon</button>
+                            <button class="option-button multi-select" data-specimen="specimen_${number}" data-feature="idc">IDC-P</button>
+                            <button class="option-button multi-select" data-specimen="specimen_${number}" data-feature="cribriform">Kribriform patern</button>
+                            <button class="option-button multi-select" data-specimen="specimen_${number}" data-feature="extraprostatic">Ekstraprostatik yayılım</button>
+                        </div>
+                    </div>
+                </div>
+            `;
+        }
+
+        function setupSpecimenListeners(specimenId) {
+            // Tumor presence buttons
+            document.querySelectorAll(`[data-specimen="${specimenId}"][data-tumor]`).forEach(btn => {
+                btn.addEventListener('click', function() {
+                    const parent = this.parentElement;
+                    parent.querySelectorAll('.option-button').forEach(b => b.classList.remove('selected'));
+                    this.classList.add('selected');
+                    
+                    specimens[specimenId].tumorPresent = this.dataset.tumor === 'tumor';
+                    const tumorDetails = document.getElementById(`${specimenId}_tumorDetails`);
+                    
+                    if (this.dataset.tumor === 'tumor') {
+                        tumorDetails.style.display = 'block';
+                    } else {
+                        tumorDetails.style.display = 'none';
+                        // Reset tumor data
+                        specimens[specimenId].gleason = { primary: null, secondary: null };
+                        specimens[specimenId].tumorPercentage = null;
+                        specimens[specimenId].perineural = false;
+                        specimens[specimenId].idc = false;
+                        specimens[specimenId].cribriform = false;
+                        specimens[specimenId].extraprostatic = false;
+                    }
+                    
+                    checkPattern4();
+                    updateReport();
+                });
+            });
+
+            // Gleason buttons
+            document.querySelectorAll(`[data-specimen="${specimenId}"][data-pattern]`).forEach(btn => {
+                btn.addEventListener('click', function() {
+                    const pattern = this.dataset.pattern;
+                    document.querySelectorAll(`[data-specimen="${specimenId}"][data-pattern="${pattern}"]`).forEach(b => b.classList.remove('selected'));
+                    this.classList.add('selected');
+                    
+                    specimens[specimenId].gleason[pattern] = parseInt(this.dataset.value);
+                    checkPattern4();
+                    updateReport();
+                });
+            });
+
+            // Percentage buttons
+            document.querySelectorAll(`[data-specimen="${specimenId}"][data-percentage]`).forEach(btn => {
+                btn.addEventListener('click', function() {
+                    document.querySelectorAll(`[data-specimen="${specimenId}"][data-percentage]`).forEach(b => b.classList.remove('selected'));
+                    this.classList.add('selected');
+                    
+                    specimens[specimenId].tumorPercentage = parseInt(this.dataset.percentage);
+                    document.getElementById(`${specimenId}_percentageManual`).value = '';
+                    updateReport();
+                });
+            });
+
+            // Manual percentage input
+            document.getElementById(`${specimenId}_percentageManual`)?.addEventListener('input', function() {
+                if (this.value) {
+                    document.querySelectorAll(`[data-specimen="${specimenId}"][data-percentage]`).forEach(b => b.classList.remove('selected'));
+                    specimens[specimenId].tumorPercentage = parseInt(this.value);
+                    updateReport();
+                }
+            });
+
+            // Feature buttons
+            document.querySelectorAll(`[data-specimen="${specimenId}"][data-feature]`).forEach(btn => {
+                btn.addEventListener('click', function() {
+                    this.classList.toggle('selected');
+                    const feature = this.dataset.feature;
+                    specimens[specimenId][feature] = this.classList.contains('selected');
+                    updateReport();
+                });
+            });
+        }
+
+        function addSpecimen() {
+            const existingCount = Object.keys(specimens).length;
+            const newNumber = existingCount + 1;
+            let location = prompt('Yeni lokalizasyon adını giriniz:');
+            
+            if (location && location.trim()) {
+                location = location.trim();
+                createSpecimen(newNumber, location);
+                updateReport();
+                
+                // Scroll to the newly added specimen
+                const newSpecimen = document.getElementById(`specimen_${newNumber}`);
+                if (newSpecimen) {
+                    newSpecimen.scrollIntoView({ behavior: 'smooth', block: 'center' });
+                }
+            }
+        }
+
+        function checkPattern4() {
+            // Check if any specimen has pattern 4
+            let hasPattern4 = false;
+            Object.values(specimens).forEach(spec => {
+                if (spec.gleason.primary === 4 || spec.gleason.secondary === 4) {
+                    hasPattern4 = true;
+                }
+            });
+
+            // Show/hide pattern 4 summary section
+            document.getElementById('pattern4Summary').style.display = hasPattern4 ? 'block' : 'none';
+        }
+
+        function calculateGradeGroup(maxPrimary, maxSecondary, pattern4Percentage, hasPattern5) {
+            // Patern 5 varsa önerme yapma
+            if (hasPattern5) {
+                return null;
+            }
+
+            // Sadece patern 3 varsa
+            if (maxPrimary === 3 && maxSecondary === 3) {
+                return { score: '3+3 = 6', group: 'Grade Grup 1' };
+            }
+
+            // Patern 4 var
+            if (pattern4Percentage !== null) {
+                if (pattern4Percentage >= 90) {
+                    return { score: '4+4 = 8', group: 'Grade Grup 4' };
+                } else if (pattern4Percentage >= 50) {
+                    return { score: '4+3 = 7', group: 'Grade Grup 3' };
+                } else if (pattern4Percentage >= 5) {
+                    return { score: '3+4 = 7', group: 'Grade Grup 2' };
+                }
+            }
+
+            // Fallback to traditional scoring
+            const sum = maxPrimary + maxSecondary;
+            if (sum <= 6) {
+                return { score: `${maxPrimary}+${maxSecondary} = ${sum}`, group: 'Grade Grup 1' };
+            } else if (sum === 7) {
+                if (maxPrimary === 3) {
+                    return { score: '3+4 = 7', group: 'Grade Grup 2' };
+                } else {
+                    return { score: '4+3 = 7', group: 'Grade Grup 3' };
+                }
+            } else if (sum === 8) {
+                return { score: '4+4 = 8', group: 'Grade Grup 4' };
+            }
+            
+            return null;
+        }
+
+        function updateReport() {
+            if (!selectedTemplate) {
+                document.getElementById('reportContent').textContent = 'Lütfen bir lokalizasyon şablonu seçiniz...';
+                return;
+            }
+
+            const report = [];
+            
+            // Header
+            report.push('Prostat, iğne biyopsi:');
+            
+            // Specimen reports
+            let totalTumorPercentage = 0;
+            let positiveCount = 0;
+            let totalCount = 0;
+            let perineuralCount = 0;
+            let hasPattern4 = false;
+            let hasPattern5 = false;
+            let hasCribriform = false;
+            let hasIDC = false;
+            let maxGleasonSum = 0;
+            let maxGleasonPrimary = 0;
+            let maxGleasonSecondary = 0;
+            
+            Object.keys(specimens)
+                .sort((a, b) => specimens[a].number - specimens[b].number)
+                .forEach(specimenId => {
+                    const spec = specimens[specimenId];
+                    totalCount++;
+                    
+                    let line = `${spec.number}- ${spec.location}: `;
+                    
+                    if (spec.tumorPresent === false) {
+                        line += 'Benign prostat dokusu';
+                    } else if (spec.tumorPresent === true) {
+                        line += 'Prostat adenokarsinomu.';
+                        positiveCount++;
+                        
+                        if (spec.gleason.primary && spec.gleason.secondary) {
+                            const sum = spec.gleason.primary + spec.gleason.secondary;
+                            line += ` Gleason grade: ${spec.gleason.primary}+${spec.gleason.secondary} = ${sum}/10.`;
+                            
+                            if (sum > maxGleasonSum) {
+                                maxGleasonSum = sum;
+                                maxGleasonPrimary = spec.gleason.primary;
+                                maxGleasonSecondary = spec.gleason.secondary;
+                            }
+                            
+                            if (spec.gleason.primary === 4 || spec.gleason.secondary === 4) {
+                                hasPattern4 = true;
+                            }
+                            if (spec.gleason.primary === 5 || spec.gleason.secondary === 5) {
+                                hasPattern5 = true;
+                            }
+                        }
+                        
+                        if (spec.tumorPercentage) {
+                            line += ` Dokudaki tümör yüzdesi: %${spec.tumorPercentage}`;
+                            totalTumorPercentage += spec.tumorPercentage;
+                        }
+                        
+                        const features = [];
+                        if (spec.perineural) {
+                            features.push('Perinöral invazyon vardır');
+                            perineuralCount++;
+                        }
+                        if (spec.idc) {
+                            features.push('IDC-P vardır');
+                            hasIDC = true;
+                        }
+                        if (spec.cribriform) {
+                            hasCribriform = true;
+                        }
+                        if (spec.extraprostatic) features.push('Ekstraprostatik yayılım vardır');
+                        
+                        if (features.length > 0) {
+                            line += '. ' + features.join('. ');
+                        }
+                    } else {
+                        line += 'Değerlendirme bekleniyor';
+                    }
+                    
+                    report.push(line);
+                });
+            
+            // Summary statistics
+            if (positiveCount > 0) {
+                const avgPercentage = (totalTumorPercentage / totalCount).toFixed(1);
+                report.push(`Tüm biyopsilerin ortalama tümör yüzdesi: %${avgPercentage}`);
+                report.push(`Prostat tümör pozitif kor / toplam kor: ${positiveCount} / ${totalCount}`);
+                
+                if (perineuralCount > 0) {
+                    report.push(`Perinöral invazyon görülen kor sayısı: ${perineuralCount}`);
+                }
+                
+                if (hasPattern4 && pattern4TotalPercentage !== null) {
+                    report.push(`Patern 4 tümör yüzdesi: %${pattern4TotalPercentage}.`);
+                    
+                    if (cribriformStatus === 'var') {
+                        report.push('Kribriform gland vardır.');
+                    } else if (cribriformStatus === 'yok') {
+                        report.push('Kribriform gland yoktur.');
+                    }
+                }
+                
+                report.push('(icd-o 8140/3 Prostatın asiner adenokarsinomu)');
+                
+                // Calculate Grade Group
+                const gradeResult = calculateGradeGroup(maxGleasonPrimary, maxGleasonSecondary, pattern4TotalPercentage, hasPattern5);
+                
+                if (gradeResult) {
+                    report.push('Modifiye Gleason Sistemi (ISUP 2005):');
+                    report.push(`Gleason Skor ${gradeResult.score}, ${gradeResult.group}`);
+                }
+                
+                // Tumor template
+                report.push('');
+                report.push('------------Tümör Şablonu------------');
+                report.push('        Sağ - Bazal - Sol');
+                report.push('+-------------------------------------------+');
+                report.push('|  %50  |   Ø   |  %30  |   Ø   |');
+                report.push('+-------------------------------------------+');
+                report.push('|   Ø   |  %70  |  %50  |   Ø   |');
+                report.push('+-------------------------------------------+');
+                report.push('|   Ø   |   Ø   |   Ø   |   Ø   |');
+                report.push('+-------------------------------------------+');
+                report.push('            - Apeks -');
+            }
+
+            // Additional notes
+            const notes = document.getElementById('additionalNotes').value;
+            if (notes) {
+                report.push('');
+                report.push('EK NOTLAR:');
+                report.push(notes);
+            }
+
+            document.getElementById('reportContent').textContent = report.join('\n');
+        }
+
+        function copyReport() {
+            const reportText = document.getElementById('reportContent').textContent;
+            navigator.clipboard.writeText(reportText).then(() => {
+                const button = document.querySelector('.copy-button');
+                const originalText = button.textContent;
+                button.textContent = 'Kopyalandı!';
+                button.style.background = '#48bb78';
+                
+                setTimeout(() => {
+                    button.textContent = originalText;
+                    button.style.background = '#4299e1';
+                }, 2000);
+            });
+        }
+    </script>
+</body>
+</html>
